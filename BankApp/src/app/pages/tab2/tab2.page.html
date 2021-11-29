@@ -1,0 +1,19 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+        <ion-title capitalize>
+            Transacciones
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-toolbar>
+    <ion-searchbar placeholder="Buscar cuenta" inputmode="decimal" type="decimal" (ionChange)="onSearchChange($event)" [debounce]="700" [value]=""></ion-searchbar>
+</ion-toolbar>
+<ion-content [fullscreen]="true">
+    <ion-grid *ngIf="bubbles" fixed>
+        <ion-row>
+            <ion-col class="ion-text-center">
+                <ion-spinner color="primary" name="bubbles"></ion-spinner>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>
