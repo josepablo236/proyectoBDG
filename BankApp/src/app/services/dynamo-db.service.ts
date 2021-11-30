@@ -10,6 +10,10 @@ export class DynamoDBService {
   getUser(user: string, pass: string){
     return true;
   }
+  isAdmin(){
+    //funcion para determinar si el usuario es administrador o no
+      return true;
+  }
   private ejecutarQuery<T>(){
     //return false;
   }

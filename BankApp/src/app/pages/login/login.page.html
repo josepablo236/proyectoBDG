@@ -9,8 +9,6 @@
 
         <ion-img src="../../../assets/images/Piggy bank_Monochromatic.svg"></ion-img>
         <ion-card>
-
-
             <ion-card-content>
                 <form class="form" #formulario="ngForm" (ngSubmit)="onSubmit(formulario)">
 
@@ -20,14 +18,13 @@
                     </ion-item-divider>
                     <ion-item-divider>
                         <ion-label>Password</ion-label>
-                        <ion-input slot="end" style="text-align: right;" type="Password" placeholder="Password" name="Password" pattern="^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])\S{6,12}$" minlength="6" required></ion-input>
+                        <ion-input slot="end" style="text-align: right;" type="Password" placeholder="Password" name="Password" pattern="^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])\S{6,12}$" minlength="6" show-hide-input required></ion-input>
                     </ion-item-divider>
-                    <ion-button class="card-margin" type="submit" expand="block">
+                    <ion-button class="card-margin" type="submit" expand="block" [disabled]="formulario.invalid">
                         continue
                     </ion-button>
                 </form>
             </ion-card-content>
         </ion-card>
-
     </div>
 </ion-content>

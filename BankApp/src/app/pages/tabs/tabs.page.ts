@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DynamoDBService } from '../../services/dynamo-db.service';
 
 @Component({
   selector: 'app-tabs',
@@ -6,6 +7,9 @@ import { Component } from '@angular/core';
   styleUrls: ['tabs.page.scss']
 })
 export class TabsPage {
-  constructor() {}
+  isAdmin: boolean;
+  constructor(private db: DynamoDBService) {
+    this.isAdmin=db.isAdmin();
+  }
 
 }

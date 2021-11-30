@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { DynamoDBService } from '../../services/dynamo-db.service';
 
@@ -18,7 +18,11 @@ export class LoginPage implements OnInit {
     if(this.db.getUser){
       formulario.resetForm();
       this.presentToast('Succesful login');
-      this.router.navigate(['/user/tabs/tab1']);
+      if(this.db.isAdmin){
+        this.router.navigate(['/user/tabs/users']);
+      }else{
+        this.router.navigate(['/user/tabs/tab1']);
+      }
     }
   }
   async presentToast(toastMessage: string) {

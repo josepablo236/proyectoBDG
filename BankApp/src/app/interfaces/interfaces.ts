@@ -8,24 +8,17 @@ export interface User {
     telefono: string;
 }
 
-export interface CuentaMonetaria {
-    numeroCuenta: number;
-    user: string;//User;
+export interface Cuenta {
+    numeroCuenta: string;
+    user: string;
     saldo: number;
-    estado: boolean;
-}
-
-export interface CuentaAhorro {
-    numeroCuenta: number;
-    user: string;//User;
-    saldo: number;
-    estado: boolean;
+    estado: string;
 }
 
 export interface Transferencia {
-    idTransfer: number;
-    destinatario: string;//User;
-    remitente: string;//User;
+    idTransfer: string;
+    destinatario: string;
+    remitente: string;
     cantidad: number;
     fecha: Date;
 }

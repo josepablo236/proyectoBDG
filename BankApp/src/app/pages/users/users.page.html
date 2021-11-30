@@ -1,0 +1,48 @@
+<ion-content>
+    <div class="center-div">
+        <form #formulario="ngForm" (ngSubmit)="onSubmit(formulario)">
+            <ion-item-group>
+                <ion-item>
+                    <ion-label position="floating">Usuario</ion-label>
+                    <ion-input maxlength='10' pattern="^([a-zA-Z0-9_\-\.]+)$" name="email" type="text" required></ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label position="floating">Password</ion-label>
+                    <ion-input type="password" placeholder="Password" show-hide-input></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label>Rol</ion-label>
+                    <ion-select (ionChange)="getItem($event)" interface="popover" placeholder="Select One">
+                        <ion-list>
+                            <ion-select-option value="admin">admin</ion-select-option>
+                            <ion-select-option value="usuario">usuario</ion-select-option>
+                        </ion-list>
+                    </ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating">Nombre</ion-label>
+                    <ion-input maxlength='25' pattern="^([a-zA-Z0-9_\-\.]+)$" name="nombre" type="text" required></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating">Direccion</ion-label>
+                    <ion-input maxlength='100' pattern="^([a-zA-Z0-9_\-\.]+)$" name="direccion" type="text" required></ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label position="floating">Fecha de Nacimiento</ion-label>
+
+                    <ion-datetime [max]="minDate" display-format="DD/MM/YYYY"></ion-datetime>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label position="floating">Telefono</ion-label>
+                    <ion-input maxlength='10' pattern="^([0-9_\-\.]+)$" name="telefono" type="text" required></ion-input>
+                </ion-item>
+            </ion-item-group>
+            <ion-button expand="block" color="primary" type="submit" [disabled]="formulario.invalid">
+                Crear Usuario
+            </ion-button>
+        </form>
+    </div>
+</ion-content>
