@@ -67,7 +67,7 @@ export class DynamoDBService {
             return "admin"
           }
           else{
-            return "user";
+            return 'user';
           }
       }
       else{
