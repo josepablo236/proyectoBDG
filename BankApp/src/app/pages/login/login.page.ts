@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { DynamoDBService } from '../../services/dynamo-db.service';
+import { User } from '../../interfaces/interfaces';
 
 @Component({
   selector: 'app-login',
@@ -10,26 +11,37 @@ import { DynamoDBService } from '../../services/dynamo-db.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  constructor(private toastController: ToastController, private db: DynamoDBService,private router: Router) { }
+  user: string;
+  pass: string;
+  
+  constructor(private toastController: ToastController, private db: DynamoDBService, private router: Router) { }
   ngOnInit() {
   }
 
   onSubmit( formulario: NgForm) {
-    if(this.db.getUser){
-      formulario.resetForm();
-      this.presentToast('Succesful login');
-      if(this.db.isAdmin){
+    this.db.getUser(this.user, this.pass).then((response) => {
+      if(response === "admin"){
+        console.log(response);
+        formulario.resetForm();
+        this.presentToast('Succesful login', 'success');
         this.router.navigate(['/user/tabs/users']);
-      }else{
+      }
+      else if(response === "user"){
+        formulario.resetForm();
+        this.presentToast('Succesful login', 'success');
         this.router.navigate(['/user/tabs/tab1']);
       }
-    }
+      else{
+        this.presentToast(response, 'danger');
+      }
+    });
   }
-  async presentToast(toastMessage: string) {
+  async presentToast(toastMessage: string, color: string) {
     const toast = await this.toastController.create({
+      cssClass: 'center',
       message: toastMessage,
       duration: 1000,
-      color: 'success'
+      color: color
     });
     toast.present();
   }

@@ -1,5 +1,5 @@
 export interface User {
-    user: string;
+    usuario: string;
     password: string;
     rol: string;
     nombre: string;
@@ -10,15 +10,15 @@ export interface User {
 
 export interface Cuenta {
     numeroCuenta: string;
-    user: string;
+    usuario: string;
     saldo: number;
     estado: string;
 }
 
 export interface Transferencia {
-    idTransfer: string;
-    destinatario: string;
+    id: string;
     remitente: string;
+    destinatario: string;
     cantidad: number;
     fecha: Date;
 }
