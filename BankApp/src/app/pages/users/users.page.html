@@ -1,48 +1,35 @@
-<ion-content>
-    <div class="center-div">
-        <form #formulario="ngForm" (ngSubmit)="onSubmit(formulario)">
-            <ion-item-group>
-                <ion-item>
-                    <ion-label position="floating">Usuario</ion-label>
-                    <ion-input maxlength='10' name="usuario" [(ngModel)]="user.usuario" type="text" required></ion-input>
-                </ion-item>
-
-                <ion-item>
-                    <ion-label position="floating">Password</ion-label>
-                    <ion-input type="password" name="pass" [(ngModel)]="user.password" placeholder="Password" minlength='5' show-hide-input required></ion-input>
-                </ion-item>
-                <ion-item>
-                    <ion-label>Rol</ion-label>
-                    <ion-select (ionChange)="getItem($event)" interface="popover" name="rol" placeholder="Select One" [(ngModel)]="user.rol" required>
-                        <ion-list>
-                            <ion-select-option value="admin">admin</ion-select-option>
-                            <ion-select-option value="usuario">usuario</ion-select-option>
-                        </ion-list>
-                    </ion-select>
-                </ion-item>
-                <ion-item>
-                    <ion-label position="floating">Nombre</ion-label>
-                    <ion-input maxlength='25' pattern="^([a-zA-Z0-9_\-\.]+)$" name="nombre" [(ngModel)]="user.nombre" type="text" required></ion-input>
-                </ion-item>
-                <ion-item>
-                    <ion-label position="floating">Direccion</ion-label>
-                    <ion-input maxlength='100' pattern="^([a-zA-Z0-9_\-\.]+)$" name="direccion" type="text" [(ngModel)]="user.direccion" required></ion-input>
-                </ion-item>
-
-                <ion-item>
-                    <ion-label position="floating">Fecha de Nacimiento</ion-label>
-
-                    <ion-datetime [max]="minDate" name="fecha" display-format="DD/MM/YYYY" [(ngModel)]="user.nacimiento"></ion-datetime>
-                </ion-item>
-
-                <ion-item>
-                    <ion-label position="floating">Telefono</ion-label>
-                    <ion-input maxlength='10' pattern="^([0-9_\-\.]+)$" name="telefono" [(ngModel)]="user.telefono" type="text" required></ion-input>
-                </ion-item>
-            </ion-item-group>
-            <ion-button expand="block" color="primary" type="submit" [disabled]="formulario.invalid">
+<ion-header [translucent]="true">
+    <ion-toolbar>
+        <ion-title fixed>
+            Administrar Usuarios
+        </ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="mostrarModalCreate()">
+                <ion-icon slot="start" name="person-add-outline"></ion-icon>
                 Crear Usuario
             </ion-button>
-        </form>
-    </div>
+        </ion-buttons>
+    </ion-toolbar>
+
+</ion-header>
+<ion-content [fullscreen]="true">
+    <ion-list>
+
+        <ion-item *ngFor="let user of users">
+            <ion-button fill="clear" slot="end" (click)="mostrarModalUsuario(user)">
+                <ion-icon name="information-circle-outline"></ion-icon>
+            </ion-button>
+
+            <ion-avatar slot="start">
+                <img src="../../../assets/images/profile-photo/empty.png">
+            </ion-avatar>
+            <ion-label>
+                <h2>{{user.usuario}}</h2>
+                <h3>{{user.rol}}</h3>
+                <p>Telefono: {{user.telefono}}</p>
+            </ion-label>
+
+        </ion-item>
+
+    </ion-list>
 </ion-content>

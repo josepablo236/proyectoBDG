@@ -1,13 +1,27 @@
 <ion-header [translucent]="true">
     <ion-toolbar>
-        <ion-title fixed>
-            Historial de Transacciones
+        <ion-title capitalize>
+            Historial
         </ion-title>
     </ion-toolbar>
-
 </ion-header>
+<ion-toolbar>
+    <ion-searchbar placeholder="Buscar transferencia" inputmode="decimal" type="decimal" (ionChange)="onSearchChange($event)" [debounce]="700" [value]="textoBuscar"></ion-searchbar>
+    <ion-buttons slot="end">
+        <ion-button (click)="onClick()">
+            <ion-icon name="apps-outline"></ion-icon>
+        </ion-button>
+    </ion-buttons>
 
+</ion-toolbar>
 <ion-content [fullscreen]="true">
-
+    <ion-grid *ngIf="bubbles" fixed>
+        <ion-row>
+            <ion-col class="ion-text-center">
+                <ion-spinner color="primary" name="bubbles"></ion-spinner>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <app-historial-transacciones *ngIf="!bubbles" [transferencias]="transferencias"></app-historial-transacciones>
 
 </ion-content>

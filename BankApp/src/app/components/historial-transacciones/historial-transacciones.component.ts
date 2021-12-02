@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Transferencia } from '../../interfaces/interfaces';
 
 @Component({
   selector: 'app-historial-transacciones',
@@ -6,7 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./historial-transacciones.component.scss'],
 })
 export class HistorialTransaccionesComponent implements OnInit {
-
+  @Input() transferencias: Transferencia[];
+  @Input() isAdmin: boolean;
   constructor() { }
 
   ngOnInit() {}

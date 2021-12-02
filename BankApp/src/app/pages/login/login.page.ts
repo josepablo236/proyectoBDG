@@ -12,22 +12,28 @@ import { DynamoDBService } from '../../services/dynamo-db.service';
 export class LoginPage implements OnInit {
   user: string;
   pass: string;
-  constructor(private toastController: ToastController, private db: DynamoDBService, private router: Router) { }
+  constructor(private toastController: ToastController, private db: DynamoDBService, private router: Router) {
+  }
   ngOnInit() {
+    this.db.currentUser = '';
+    this.db.isAdmin = false;
   }
 
   onSubmit( formulario: NgForm) {
     this.db.getUser(this.user, this.pass).then((response) => {
       if(response === 'admin'){
-        console.log(response);
         formulario.resetForm();
+        this.db.isAdmin = true;
+        this.db.currentUser = this.user;
         this.presentToast('Succesful login', 'success');
         this.router.navigate(['/user/tabs/users']);
       }
       else if(response === 'user'){
-        formulario.resetForm();
+        this.db.isAdmin = false;
+        this.db.currentUser = this.user;
         this.presentToast('Succesful login', 'success');
         this.router.navigate(['/user/tabs/tab1']);
+        formulario.resetForm();
       }
       else{
         this.presentToast(response, 'danger');

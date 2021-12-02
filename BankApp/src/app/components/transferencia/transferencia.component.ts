@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Cuenta } from '../../interfaces/interfaces';
 
 @Component({
   selector: 'app-transferencia',
@@ -7,8 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TransferenciaComponent implements OnInit {
 
+  @Input() cuentas: Cuenta[];
+  @Input() isAdmin: boolean;
   constructor() { }
 
   ngOnInit() {}
-
+  onClick(){
+  }
 }

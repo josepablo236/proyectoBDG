@@ -1,6 +1,7 @@
 export interface User {
     usuario: string;
     password: string;
+    imgpath?: string;
     rol: string;
     nombre: string;
     direccion: string;

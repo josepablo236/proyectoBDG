@@ -1,3 +1,29 @@
-<p>
-  transferencia works!
-</p>
+<ion-list *ngFor="let cuenta of cuentas">
+    <ion-card>
+        <ion-card-header>
+            <ion-card-subtitle>{{cuenta.usuario}}</ion-card-subtitle>
+            <ion-card-title>{{cuenta.numeroCuenta}}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-buttons>
+                <ion-button (click)="onClick()">
+                    <ion-icon slot="start" name="heart-outline"></ion-icon>
+                    Favorito
+                </ion-button>
+                <ion-button (click)="onClick()">
+                    <ion-icon slot="start" name="receipt-outline"></ion-icon>
+                    Transferir
+                </ion-button>
+                <ion-button slot="start" *ngIf="isAdmin" (click)="onClick()">
+                    <ion-icon slot="start" name="add"></ion-icon>
+                    Cuenta Ahorro
+                </ion-button>
+                <ion-button slot="end" *ngIf="isAdmin" (click)="onClick()">
+                    <ion-icon slot="start" name="ban-outline"></ion-icon>
+                    Bloquear
+                </ion-button>
+            </ion-buttons>
+
+        </ion-card-content>
+    </ion-card>
+</ion-list>

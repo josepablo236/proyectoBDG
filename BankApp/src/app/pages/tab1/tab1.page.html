@@ -1,12 +1,21 @@
 <ion-header [translucent]="true">
     <ion-toolbar>
         <ion-title>
-            {{tab1title}}
+            Mi cuenta
         </ion-title>
+        <ion-buttons slot="end">
+
+            <ion-button (click)="mostrarModalUsuario(user)">
+                <ion-icon slot="start" name="cog-outline"></ion-icon>
+            </ion-button>
+            <ion-button (click)="cerrarSesion()">
+                <ion-icon name="exit-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
 
-
+    <app-transferencia [cuentas]="cuentas" [isAdmin]="false"></app-transferencia>
 </ion-content>

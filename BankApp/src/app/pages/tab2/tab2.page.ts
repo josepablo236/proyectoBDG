@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { DynamoDBService } from '../../services/dynamo-db.service';
+import { Cuenta } from '../../interfaces/interfaces';
 
 @Component({
   selector: 'app-tab2',
@@ -7,10 +9,28 @@ import { Component } from '@angular/core';
 })
 export class Tab2Page {
   bubbles = false; //variable para mostrar el spinnig bubbles
-  constructor() {}
+  isAdmin: boolean;
+  textoBuscar= '';
+  cuentas: Cuenta[] =[];
+  cuenta: Cuenta = {
+    numeroCuenta:'sad',
+    usuario: 'dsa',
+    saldo: 1500,
+    estado: 'activa'
+  };
+
+  constructor(private db: DynamoDBService) {
+    this.init();
+  }
+  async init(){
+   // this.isAdmin= await this.db.isAdmin();
+  }
+  getFavorites(){
+
+  }
   onSearchChange(event){
     this.bubbles = true;
-    const valor = event.detail.value;
+    this.textoBuscar = event.detail.value;
     if(true){
     setTimeout(() => {
       }, 1000);
@@ -19,7 +39,7 @@ export class Tab2Page {
         this.bubbles = false;
         }, 500);
     }
-    if(valor === ''){
+    if(this.textoBuscar === ''){
       this.bubbles = false;
     }
   }

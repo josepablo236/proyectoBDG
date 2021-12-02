@@ -12,70 +12,37 @@ const urlAPI = 'https://091gij42xe.execute-api.us-east-2.amazonaws.com/proyecto'
 export class DynamoDBService {
 
   usuario: User;
-  constructor() { }
-
-  private getQuery<T>(query: string){
-    query = urlAPI + query;
-    return axios.get<T>(query);
-  }
-
-  private async updateQuery(query: string, body: any){
-    query = urlAPI + query;
-    let success: boolean;
-    await axios.put(query, body).then(resp =>{
-      if(resp.status === 200){
-        success = true;
-      }
-      else{
-        success = false;
-      }
-    });
-    return success;
-  }
-
-  private async deleteQuery(query: string, body: any){
-    query = urlAPI + query;
-    let success: boolean;
-    await axios.delete(query, body).then(resp =>{
-      if(resp.status === 200){
-        success = true;
-      }
-      else{
-        success = false;
-      }
-    });
-    return success;
+  isAdmin: boolean;
+  currentUser: string;
+  constructor() {
+    this.isAdmin = false;
   }
 
   //Login
   async getUser(user: string, password: string){
     const url = urlAPI + `/user?usuario=${user}`;
-    let res = await axios.get(url);
-    console.log(res.data);
+    const res = await axios.get(url);
     if(res.data){
       this.usuario = res.data;
-      console.log(this.usuario);
-      let pass = String(this.usuario.password);
+      const pass = String(this.usuario.password);
       // Decrypt
-      var bytes  = CryptoJS.AES.decrypt(pass, 'secret key 123');
-      var originalText = bytes.toString(CryptoJS.enc.Utf8);
-      console.log(password);
-      console.log(originalText);
+      const bytes  = CryptoJS.AES.decrypt(pass, 'secret key 123');
+      const originalText = bytes.toString(CryptoJS.enc.Utf8);
       if(password === originalText)
       {
-          if(this.usuario.rol === "admin"){
-            return "admin"
+          if(this.usuario.rol === 'admin'){
+            return 'admin';
           }
           else{
             return 'user';
           }
       }
       else{
-          return "Contraseña incorrecta";
+          return 'Contraseña incorrecta';
       }
     }
     else{
-      return "Usuario no encontrado";
+      return 'Usuario no encontrado';
     }
   }
 
@@ -92,9 +59,9 @@ export class DynamoDBService {
   }
 
   //Función para eliminar usuario
-  async deleteUser(usuario: string){
+  async deleteUser(_usuario: string){
     const request = {
-      usuario: usuario
+      usuario: _usuario
     };
     const url = urlAPI + '/user';
     return this.deleteQuery(url, request);
@@ -102,6 +69,7 @@ export class DynamoDBService {
 
   //Funcion para crear cuenta monetaria
   async createMonetary(cuenta: Cuenta){
+    console.log(cuenta);
     const url = urlAPI + '/monetary-account';
     await axios.post(url, cuenta);
     return true;
@@ -125,20 +93,20 @@ export class DynamoDBService {
   }
 
   //Función para modificar saldo de la cuenta monetaria
-  modifyMonetary(usuario: string, updateKey: string, updateValue: string){
+  modifyMonetary(_usuario: string, _updateKey: string, _updateValue: string){
     const request = {
-      usuario: usuario,
-      updateKey: updateKey,
-      updateValue: updateValue
+      usuario: _usuario,
+      updateKey: _updateKey,
+      updateValue: _updateValue
     };
     const url = '/monetary-account';
     return this.updateQuery(url, request);
   }
 
   //Función para eliminar cuenta monetaria
-  async deleteMonetary(usuario: string){
+  async deleteMonetary(_usuario: string){
     const request = {
-      usuario: usuario
+      usuario: _usuario
     };
     const url = urlAPI + '/monetary-account';
     return this.deleteQuery(url, request);
@@ -146,6 +114,7 @@ export class DynamoDBService {
 
   //Funcion para crear cuenta ahorros
   async createAccount(cuenta: Cuenta){
+    console.log(cuenta);
     const url = urlAPI + '/savings-account';
     await axios.post(url, cuenta);
     return true;
@@ -169,11 +138,11 @@ export class DynamoDBService {
   }
 
   //Función para modificar saldo de la cuenta ahorro
-  modifyAccount(cuenta: string, updateKey: string, updateValue: string){
+  modifyAccount(cuenta: string, _updateKey: string, _updateValue: string){
     const request = {
       numeroCuenta: cuenta,
-      updateKey: updateKey,
-      updateValue: updateValue
+      updateKey: _updateKey,
+      updateValue: _updateValue
     };
     const url = '/savings-account';
     return this.updateQuery(url, request);
@@ -212,5 +181,36 @@ export class DynamoDBService {
     const query = `/transferencia?id=${id}`;
     return this.getQuery<Transferencia>(query);
   }
+  private async getQuery<T>(query: string){
+    query = urlAPI + query;
+    return await axios.get<T>(query);
+  }
 
+  private async updateQuery(query: string, body: any){
+    query = urlAPI + query;
+    let success: boolean;
+    await axios.put(query, body).then(resp =>{
+      if(resp.status === 200){
+        success = true;
+      }
+      else{
+        success = false;
+      }
+    });
+    return success;
+  }
+
+  private async deleteQuery(query: string, body: any){
+    query = urlAPI + query;
+    let success: boolean;
+    await axios.delete(query, body).then(resp =>{
+      if(resp.status === 200){
+        success = true;
+      }
+      else{
+        success = false;
+      }
+    });
+    return success;
+  }
 }
