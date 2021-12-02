@@ -36,7 +36,6 @@ export class UsersPage implements OnInit {
     this.users=resp.data['usuarios'];
     });
   }
- 
   async presentToast(toastMessage: string, toastColor: string) {
     const toast = await this.toastController.create({
       cssClass: 'center',

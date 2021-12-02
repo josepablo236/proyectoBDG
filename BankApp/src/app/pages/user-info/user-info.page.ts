@@ -25,7 +25,7 @@ export class UserInfoPage implements OnInit {
 
   ngOnInit() {
     if(this.user.img === undefined){
-      this.imgPath= "../../../assets/images/profile-photo/empty.png";
+      this.imgPath= '../../../assets/images/profile-photo/empty.png';
     }
     else{
       this.imgPath = this.user.img;
@@ -94,7 +94,6 @@ export class UserInfoPage implements OnInit {
       this.message = 'Llena todos los campos';
     }
   }
-  
   salirModal(){
     this.modalController.dismiss();
     this.alert = false;
