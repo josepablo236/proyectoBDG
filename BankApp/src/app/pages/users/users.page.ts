@@ -36,13 +36,15 @@ export class UsersPage implements OnInit {
     this.users=resp.data['usuarios'];
     });
   }
+ 
   async presentToast(toastMessage: string, toastColor: string) {
     const toast = await this.toastController.create({
-      message: toastMessage,
       cssClass: 'center',
+      message: toastMessage,
       duration: 1000,
-      color: toastColor,
+      color: toastColor
     });
+    toast.present();
   }
 
   async mostrarModalCreate() {

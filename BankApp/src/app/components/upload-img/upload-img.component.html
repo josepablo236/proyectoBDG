@@ -1,0 +1,25 @@
+<ion-card *ngIf="!isImgUploaded">
+  <ion-card-header>
+    <ion-card-title>Selecciona una imagen</ion-card-title>
+  </ion-card-header>
+
+  <ion-button color="primary">
+    <input type="file" class="upload" (change)="fileUpload($event.target.files)" />
+  </ion-button>
+</ion-card>
+
+<ion-card *ngIf="isImgUploaded">
+  <ion-card-header>
+    <ion-card-title>
+      Imagen seleccionada
+    </ion-card-title>
+  </ion-card-header>
+  <ion-card>
+    <ion-card-content>
+      <img [src]="imgPath" />
+      <ion-button (click)="guardarFoto()" expand="block">
+        Guardar
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-card>

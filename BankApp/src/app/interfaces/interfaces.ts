@@ -1,7 +1,7 @@
 export interface User {
     usuario: string;
     password: string;
-    imgpath?: string;
+    img?: string;
     rol: string;
     nombre: string;
     direccion: string;

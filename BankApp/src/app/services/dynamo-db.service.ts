@@ -53,6 +53,28 @@ export class DynamoDBService {
     return true;
   }
 
+  //Función para modificar contraseña
+  modifyPass(user: string, _updateKey: string, _updateValue: string){
+    const request = {
+      usuario: user,
+      updateKey: _updateKey,
+      updateValue: _updateValue
+    };
+    const url = '/user';
+    return this.updateQuery(url, request);
+  }
+
+  //Función para modificar foto
+  modifyImg(user: string, _updateKey: string, _updateValue: any){
+    const request = {
+      usuario: user,
+      updateKey: _updateKey,
+      updateValue: _updateValue
+    };
+    const url = '/user';
+    return this.updateQuery(url, request);
+  }
+
   //Funcion para traer todos los usuarios
   getUsers(){
     return this.getQuery<User[]>('/users');
@@ -170,9 +192,9 @@ export class DynamoDBService {
     return this.getQuery<Transferencia[]>('/transferencias');
   }
 
-  //Función para traer transferencias por usuario
-  async getUserTrans(emisor: string){
-    const query = `/utransferencias?emisor=${emisor}`;
+  //Función para traer transferencias por usuario (como remitente y destinatario)
+  async getUserTrans(usuario: string){
+    const query = `/utransferencias?usuario=${usuario}`;
     return this.getQuery<Transferencia[]>(query);
   }
 
@@ -181,11 +203,14 @@ export class DynamoDBService {
     const query = `/transferencia?id=${id}`;
     return this.getQuery<Transferencia>(query);
   }
+
+  //Metodo para get
   private async getQuery<T>(query: string){
     query = urlAPI + query;
     return await axios.get<T>(query);
   }
 
+  //Metodo para update
   private async updateQuery(query: string, body: any){
     query = urlAPI + query;
     let success: boolean;
@@ -200,6 +225,7 @@ export class DynamoDBService {
     return success;
   }
 
+  //Metodo para delete
   private async deleteQuery(query: string, body: any){
     query = urlAPI + query;
     let success: boolean;

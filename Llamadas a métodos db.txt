@@ -1,3 +1,9 @@
+//Modificar contraseña de usuario
+    this.db.modifyPass('joseor','password', '7000').then(resp =>{
+      //Validar si resp es true
+      console.log(resp);
+    });
+
 //Eliminar un usuario
     // this.db.deleteUser('ferore').then(resp =>{
     //   //Validar si resp es true

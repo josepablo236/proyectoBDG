@@ -31,3 +31,24 @@
     align-items: center !important;
     text-align: center;
   }
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.alert-success {
+  color: white;
+  background-color: rgb(132, 243, 132);
+  border-color: rgb(132, 243, 132);
+}
+  
+.alert {
+    position: relative;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+}
