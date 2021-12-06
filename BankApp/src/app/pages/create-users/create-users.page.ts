@@ -5,7 +5,7 @@ import { User, Cuenta } from '../../interfaces/interfaces';
 import * as CryptoJS from 'crypto-js';
 import { DynamoDBService } from '../../services/dynamo-db.service';
 import { formatDate } from '@angular/common';
-
+import { v4 as uuidv4 } from 'uuid';
 @Component({
   selector: 'app-create-users',
   templateUrl: './create-users.page.html',
@@ -16,14 +16,14 @@ export class CreateUsersPage implements OnInit {
   checked: boolean;
   minDate = (new Date()).getFullYear()-18;
   user: User = {
-        usuario: '',
-        password: '',
-        rol: '',
-        nombre: '' ,
-        direccion: '',
-        nacimiento: null,
-        telefono:'',
-    };
+    usuario: '',
+    password: '',
+    rol: '',
+    nombre: '' ,
+    direccion: '',
+    nacimiento: '',
+    telefono:'',
+};
   public opt = [
     { val: 'Monetaria', isChecked: true },
     { val: 'Ahorro', isChecked: false }];
@@ -34,40 +34,38 @@ export class CreateUsersPage implements OnInit {
   }
   async init(){
     this.checked = false;
+    //password definido
+    this.user.password = '12345';
   }
-  async crearCuentaMonetaria(){
-    let cuenta: Cuenta = {
+  //metodo para crear cuentas
+  async crearCuentas(){
+    const cuenta: Cuenta = {
       usuario: this.user.usuario,
-      numeroCuenta: 'sdfsd',
+      numeroCuenta: uuidv4(),
       saldo: 1000.00,
       estado: 'activa'
     };
-    console.log(cuenta);
+
+    //metodo de la db para crear cuentas monetarias
     this.db.createMonetary(cuenta);
+
+    cuenta.numeroCuenta = uuidv4();
+
+    cuenta.saldo = 0;
     if (!this.checked) {
-      cuenta.saldo = 0;
-     this.db.createAccount(cuenta);
-    }
-  }
-
-  //Crear usuario
-  async onSubmit( formulario: NgForm ) {
-    this.user.password = this.encrypt();
-
-    if(this.user !== null  && this.user.nacimiento !== null){
-      this.crearUsuario();
-      this.salirModal();
-    }else{
-      this.presentToast('Llena todos los campos','danger');
+      //cuenta de ahorro creada
+      this.db.createAccount(cuenta);
     }
   }
 
   crearUsuario(): boolean{
+    //role y estado asignados por defecto
     this.user.rol = 'usuario';
+    this.user.estado = 'activa';
     this.db.createUser(this.user).then(response =>{
       if(response){
         this.presentToast('Usuario creado satisfactoriamente', 'success');
-        this.crearCuentaMonetaria();
+        this.crearCuentas();
         return true;
       }else{
         this.presentToast('Error al crear el usuario', 'danger');
@@ -83,8 +81,8 @@ export class CreateUsersPage implements OnInit {
   }
 
   getDateItem(event){
-    //formatDate(event.detail.value, 'yyyy-MM-dd', 'en-US');
-    this.user.nacimiento = event.detail.value;
+    //
+    this.user.nacimiento = formatDate(event.detail.value, 'yyyy-MM-dd', 'en-US');
     console.log(this.user.nacimiento);
   }
 
@@ -94,7 +92,17 @@ export class CreateUsersPage implements OnInit {
   salirModal(){
     this.modalCtrl.dismiss();
   }
+  //Crear usuario
+  async onSubmit( formulario: NgForm ) {
+    this.user.password = this.encrypt();
 
+    if(this.user.nacimiento !== ''){
+      this.crearUsuario();
+      this.salirModal();
+    }else{
+      this.presentToast('Llena todos los campos','danger');
+    }
+  }
   async presentToast(toastMessage: string, toastColor: string) {
     const toast = await this.toastController.create({
       message: toastMessage,
@@ -102,5 +110,6 @@ export class CreateUsersPage implements OnInit {
       duration: 1000,
       color: toastColor,
     });
+    toast.present();
   }
 }

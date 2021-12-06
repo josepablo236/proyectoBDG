@@ -3,12 +3,24 @@
         <ion-title capitalize>
             Cuentas
         </ion-title>
+
+        <ion-buttons slot="end">
+            <ion-button (click)="createTransfer()">
+                <ion-icon slot="icon-only" name="add"></ion-icon>
+            </ion-button>
+        </ion-buttons>
     </ion-toolbar>
 </ion-header>
-<ion-toolbar>
-    <ion-searchbar placeholder="Buscar cuenta" inputmode="decimal" type="decimal" (ionChange)="onSearchChange($event)" [debounce]="700" [value]="textoBuscar"></ion-searchbar>
+<ion-toolbar *ngIf="isAdmin">
+    <ion-searchbar placeholder="Buscar transferencia" inputmode="decimal" type="decimal" (ionChange)="onSearchChange($event)" [debounce]="700" [value]="textoBuscar"></ion-searchbar>
+    <ion-buttons slot="end">
+        <ion-button>
+            <ion-icon name="apps-outline"></ion-icon>
+        </ion-button>
+    </ion-buttons>
+
 </ion-toolbar>
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="ion-padding">
 
     <ion-grid *ngIf="bubbles" fixed>
         <ion-row>
@@ -17,5 +29,34 @@
             </ion-col>
         </ion-row>
     </ion-grid>
-    <app-transferencia *ngIf="textoBuscar === ''" [cuentas]="cuentas" [isAdmin]="isAdmin"></app-transferencia>
+    <h3 *ngIf="cuentas.length !== 0">Cuentas Monetarias</h3>
+    <app-cuenta *ngIf="textoBuscar === '' && !bubbles" [cuentas]="cuentas" [isAdmin]="isAdmin"></app-cuenta>
+
+    <h3 *ngIf="cuentasAhorro.length !== 0">Cuenta/s de Ahorro</h3>
+    <ion-list *ngIf="cuentasAhorro.length !== 0">
+        <ion-card *ngFor="let cuenta of cuentasAhorro">
+            <ion-card-header>
+                <ion-card-subtitle>{{cuenta.usuario}}</ion-card-subtitle>
+                <ion-card-title>{{cuenta.numeroCuenta}}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <p capitalize>{{cuenta.estado}}</p>
+                <ion-item-group class="flex">
+                    <ion-label> Q {{cuenta.saldo}}</ion-label>
+                </ion-item-group>
+                <ion-buttons class="space-between">
+                    <ion-button (click)="transferir(cuenta.usuario)">
+                        <ion-icon slot="start" name="reader-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button (click)="historial()">
+                        <ion-icon slot="start" name="compass-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button slot="end" *ngIf="isAdmin" (click)="blockAccount(cuenta.usuario)">
+                        <ion-icon slot="start" name="ban-outline"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-card-content>
+        </ion-card>
+    </ion-list>
+
 </ion-content>

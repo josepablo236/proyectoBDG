@@ -15,22 +15,16 @@ export class LoginPage implements OnInit {
   constructor(private toastController: ToastController, private db: DynamoDBService, private router: Router) {
   }
   ngOnInit() {
-    this.db.currentUser = '';
-    this.db.isAdmin = false;
   }
 
   onSubmit( formulario: NgForm) {
     this.db.getUser(this.user, this.pass).then((response) => {
       if(response === 'admin'){
-        formulario.resetForm();
-        this.db.isAdmin = true;
-        this.db.currentUser = this.user;
         this.presentToast('Succesful login', 'success');
         this.router.navigate(['/user/tabs/users']);
+        formulario.resetForm();
       }
       else if(response === 'user'){
-        this.db.isAdmin = false;
-        this.db.currentUser = this.user;
         this.presentToast('Succesful login', 'success');
         this.router.navigate(['/user/tabs/tab1']);
         formulario.resetForm();
@@ -40,6 +34,7 @@ export class LoginPage implements OnInit {
       }
     });
   }
+
   async presentToast(toastMessage: string, toastColor: string) {
     const toast = await this.toastController.create({
       cssClass: 'center',

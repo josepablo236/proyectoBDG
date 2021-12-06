@@ -1,11 +1,13 @@
+
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit } from '@angular/core';
-import { ModalController, ToastController } from '@ionic/angular';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { DynamoDBService } from 'src/app/services/dynamo-db.service';
 import { User } from '../../interfaces/interfaces';
 import * as CryptoJS from 'crypto-js';
 import { CreateUsersPage } from '../create-users/create-users.page';
 import { UserInfoPage } from '../user-info/user-info.page';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -23,18 +25,42 @@ export class UsersPage implements OnInit {
     rol: '',
     nombre: '',
     direccion: '',
-    nacimiento: new Date(),
+    nacimiento: '',
     telefono: ''
   };
   users: User[] = [];
-  constructor(private toastController: ToastController, private db: DynamoDBService, private modalCtrl: ModalController){
+  constructor(private db: DynamoDBService,
+              private router: Router,
+              private toastController: ToastController,
+              private modalCtrl: ModalController,
+              private alertController: AlertController){
   }
 
   ngOnInit() {
     //Mostrar todos los usuarios creados (admin)
-    this.db.getUsers().then(resp =>{
-    this.users=resp.data['usuarios'];
-    });
+    this.getUsers();
+  }
+  async getUsers(){
+    await this.db.getUsers().then(resp =>{
+      this.users=  resp.data['usuarios'];
+      });
+  }
+  eliminarUsuario(user: User){
+    this.db.deleteUser(user.usuario);
+  }
+  cerrarSesion(){
+    this.db.currentUser = '';
+    this.db.isAdmin = false;
+    this.presentAlertConfirm();
+  }
+  async ionViewWillEnter(){
+    const user = await this.db.currentUser;
+    if( user === '' || user === undefined){
+        await this.presentToast('Sesion expirada','danger');
+        this.router.navigate(['/']);
+    }else{
+      this.getUsers();
+    }
   }
   async presentToast(toastMessage: string, toastColor: string) {
     const toast = await this.toastController.create({
@@ -45,7 +71,29 @@ export class UsersPage implements OnInit {
     });
     toast.present();
   }
+  async presentAlertConfirm() {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: '',
+      message: 'Deseas cerrar sesion',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+          }
+        }, {
+          text: 'Aceptar',
+          handler: () => {
+            this.router.navigate(['/']);
+          }
+        }
+      ]
+    });
 
+    await alert.present();
+  }
   async mostrarModalCreate() {
     const modal = await this.modalCtrl.create({
       component: CreateUsersPage,

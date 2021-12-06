@@ -1,0 +1,31 @@
+<ion-list *ngFor="let cuenta of cuentas">
+    <ion-card>
+        <ion-card-header>
+            <ion-card-subtitle>{{cuenta.usuario}}</ion-card-subtitle>
+            <ion-card-title>{{cuenta.numeroCuenta}}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+            <p capitalize>{{cuenta.estado}}</p>
+            <ion-item-group *ngIf="isAdmin" class="flex">
+                <ion-label> Q {{cuenta.saldo}}</ion-label>
+            </ion-item-group>
+
+            <ion-buttons>
+
+                <ion-button (click)="createtransfer()">
+                    <ion-icon slot="start" name="receipt-outline"></ion-icon>
+
+                </ion-button>
+                <ion-button slot="start" *ngIf="isAdmin" (click)="createSavingAccount(cuenta.usuario)">
+                    <ion-icon slot="start" name="add"></ion-icon>
+
+                </ion-button>
+                <ion-button slot="end" *ngIf="isAdmin" (click)="blockAccount(cuenta.usuario)">
+                    <ion-icon slot="start" name="ban-outline"></ion-icon>
+
+                </ion-button>
+            </ion-buttons>
+
+        </ion-card-content>
+    </ion-card>
+</ion-list>

@@ -2,10 +2,11 @@ export interface User {
     usuario: string;
     password: string;
     img?: string;
+    estado?: string;
     rol: string;
     nombre: string;
     direccion: string;
-    nacimiento: Date;
+    nacimiento: string;
     telefono: string;
 }
 

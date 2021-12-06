@@ -15,7 +15,6 @@ export class DynamoDBService {
   isAdmin: boolean;
   currentUser: string;
   constructor() {
-    this.isAdmin = false;
   }
 
   //Login
@@ -30,11 +29,18 @@ export class DynamoDBService {
       const originalText = bytes.toString(CryptoJS.enc.Utf8);
       if(password === originalText)
       {
+        this.isAdmin = false;
+        this.currentUser = user;
           if(this.usuario.rol === 'admin'){
+            this.isAdmin = true;
             return 'admin';
           }
           else{
-            return 'user';
+            if (this.usuario.estado === 'activa') {
+              return 'user';
+            }else{
+              return 'Cuenta bloqueada';
+            }
           }
       }
       else{
@@ -227,7 +233,6 @@ export class DynamoDBService {
 
   //Metodo para delete
   private async deleteQuery(query: string, body: any){
-    query = urlAPI + query;
     let success: boolean;
     await axios.delete(query, body).then(resp =>{
       if(resp.status === 200){

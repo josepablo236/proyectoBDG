@@ -20,7 +20,8 @@ export class UserInfoPage implements OnInit {
   confirmPassword: string;
   message: string;
   imgPath: any;
-  constructor(private modalController: ModalController,private db: DynamoDBService) {
+  constructor(private modalController: ModalController,
+              private db: DynamoDBService) {
   }
 
   ngOnInit() {

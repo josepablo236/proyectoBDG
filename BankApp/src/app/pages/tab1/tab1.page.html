@@ -8,14 +8,68 @@
             <ion-button (click)="mostrarModalUsuario(user)">
                 <ion-icon slot="start" name="cog-outline"></ion-icon>
             </ion-button>
-            <ion-button (click)="cerrarSesion()">
+            <ion-button color="danger" (click)="cerrarSesion()">
                 <ion-icon name="exit-outline"></ion-icon>
             </ion-button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-
-    <app-transferencia [cuentas]="cuentas" [isAdmin]="false"></app-transferencia>
+<ion-content [fullscreen]="true" class="ion-padding">
+    <ion-grid *ngIf="bubbles" fixed>
+        <ion-row>
+            <ion-col class="ion-text-center">
+                <ion-spinner color="primary" name="bubbles"></ion-spinner>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <div *ngIf="!bubbles">
+        <h3>Cuenta Monetaria</h3>
+        <ion-card>
+            <ion-card-header>
+                <ion-card-subtitle>{{cuentaMonetaria.usuario}}</ion-card-subtitle>
+                <ion-card-title>{{cuentaMonetaria.numeroCuenta}}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <p capitalize>{{cuentaMonetaria.estado}}</p>
+                <ion-item-group class="flex">
+                    <ion-label> Q {{cuentaMonetaria.saldo}}</ion-label>
+                </ion-item-group>
+                <ion-buttons class="space-between">
+                    <ion-button (click)="transferir()">
+                        <ion-icon slot="start" name="reader-outline"></ion-icon>
+                        Transferir
+                    </ion-button>
+                    <ion-button (click)="historial()">
+                        <ion-icon slot="start" name="compass-outline"></ion-icon>
+                        Historial
+                    </ion-button>
+                </ion-buttons>
+            </ion-card-content>
+        </ion-card>
+        <h3 *ngIf="cuentas.length !== 0">Cuenta/s de Ahorro</h3>
+        <ion-list *ngIf="cuentas.length !== 0">
+            <ion-card *ngFor="let cuenta of cuentas">
+                <ion-card-header>
+                    <ion-card-title>{{cuenta.numeroCuenta}}</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                    <p capitalize>{{cuenta.estado}}</p>
+                    <ion-item-group class="flex">
+                        <ion-label> Q {{cuenta.saldo}}</ion-label>
+                    </ion-item-group>
+                    <ion-buttons class="space-between">
+                        <ion-button (click)="transferir()">
+                            <ion-icon slot="start" name="reader-outline"></ion-icon>
+                            Transferir
+                        </ion-button>
+                        <ion-button (click)="historial()">
+                            <ion-icon slot="start" name="compass-outline"></ion-icon>
+                            Historial
+                        </ion-button>
+                    </ion-buttons>
+                </ion-card-content>
+            </ion-card>
+        </ion-list>
+    </div>
 </ion-content>

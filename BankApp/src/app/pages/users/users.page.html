@@ -1,14 +1,19 @@
 <ion-header [translucent]="true">
     <ion-toolbar>
-        <ion-title fixed>
+
+        <ion-title class="ion-text-center" capitalize>
             Administrar Usuarios
         </ion-title>
         <ion-buttons slot="end">
             <ion-button (click)="mostrarModalCreate()">
                 <ion-icon slot="start" name="person-add-outline"></ion-icon>
-                Crear Usuario
+            </ion-button>
+            <ion-button color="danger" (click)="cerrarSesion()">
+                <ion-icon name="exit-outline"></ion-icon>
             </ion-button>
         </ion-buttons>
+
+
     </ion-toolbar>
 
 </ion-header>
@@ -16,9 +21,15 @@
     <ion-list>
 
         <ion-item *ngFor="let user of users">
-            <ion-button fill="clear" slot="end" (click)="mostrarModalUsuario(user)">
-                <ion-icon name="information-circle-outline"></ion-icon>
-            </ion-button>
+            <ion-buttons slot="end">
+                <ion-button color="primary" fill="clear" slot="end" (click)="mostrarModalUsuario(user)">
+                    <ion-icon name="information-circle-outline"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" slot="end" (click)="eliminarUsuario(user)">
+                    <ion-icon color="danger" name="close-circle-outline"></ion-icon>
+                </ion-button>
+            </ion-buttons>
+
 
             <ion-avatar slot="start">
                 <img src="../../../assets/images/profile-photo/empty.png">

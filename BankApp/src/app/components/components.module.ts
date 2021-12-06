@@ -5,12 +5,13 @@ import { HistorialTransaccionesComponent } from './historial-transacciones/histo
 import { TransferenciaComponent } from './transferencia/transferencia.component';
 import { AlertComponent } from './alert/alert.component';
 import { UploadImgComponent } from './upload-img/upload-img.component';
+import { CuentaComponent } from './cuenta/cuenta.component';
 
 
 
 @NgModule({
-  declarations: [ HistorialTransaccionesComponent,TransferenciaComponent, AlertComponent, UploadImgComponent],
-  exports: [ HistorialTransaccionesComponent,TransferenciaComponent, AlertComponent, UploadImgComponent],
+  declarations: [ HistorialTransaccionesComponent,TransferenciaComponent, AlertComponent, UploadImgComponent,CuentaComponent],
+  exports: [ HistorialTransaccionesComponent,TransferenciaComponent, AlertComponent, UploadImgComponent,CuentaComponent],
   imports: [
     CommonModule,IonicModule
   ]

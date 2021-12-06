@@ -1,29 +1,40 @@
-<ion-list *ngFor="let cuenta of cuentas">
-    <ion-card>
-        <ion-card-header>
-            <ion-card-subtitle>{{cuenta.usuario}}</ion-card-subtitle>
-            <ion-card-title>{{cuenta.numeroCuenta}}</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-            <ion-buttons>
-                <ion-button (click)="onClick()">
-                    <ion-icon slot="start" name="heart-outline"></ion-icon>
-                    Favorito
-                </ion-button>
-                <ion-button (click)="onClick()">
-                    <ion-icon slot="start" name="receipt-outline"></ion-icon>
-                    Transferir
-                </ion-button>
-                <ion-button slot="start" *ngIf="isAdmin" (click)="onClick()">
-                    <ion-icon slot="start" name="add"></ion-icon>
-                    Cuenta Ahorro
-                </ion-button>
-                <ion-button slot="end" *ngIf="isAdmin" (click)="onClick()">
-                    <ion-icon slot="start" name="ban-outline"></ion-icon>
-                    Bloquear
-                </ion-button>
-            </ion-buttons>
+<div class="div-center">
+    <form #formulario="ngForm" (ngSubmit)="onSubmit(formulario)">
+        <ion-item-group>
+            <ion-item>
+                <ion-label position="floating">Cuenta del Destinatario</ion-label>
+                <ion-input maxlength='10' pattern="^([a-zA-Z0-9_\-\.]+)$" name="usuario" type="text" required>
+                </ion-input>
+            </ion-item>
 
-        </ion-card-content>
-    </ion-card>
-</ion-list>
+            <ion-item>
+                <ion-label>Cuenta a debitar</ion-label>
+                <ion-select (ionChange)="getItem($event)" interface="popover" name="rol" placeholder="Select One" required>
+                    <ion-list>
+                        <ion-select-option value="admin">cuenta 1</ion-select-option>
+                        <ion-select-option value="usuario">cuenta2 </ion-select-option>
+                    </ion-list>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label>Cuenta a acreditar</ion-label>
+                <ion-select (ionChange)="getItem($event)" interface="popover" name="rol" placeholder="Select One" required>
+                    <ion-list>
+                        <ion-select-option value="admin">fav1</ion-select-option>
+                        <ion-select-option value="usuario">fav2</ion-select-option>
+                    </ion-list>
+                </ion-select>
+            </ion-item>
+
+            <ion-item>
+                <ion-label position="floating">Cantidad</ion-label>
+                <ion-input name="cantidad" type="number" required></ion-input>
+            </ion-item>
+        </ion-item-group>
+
+        <ion-button class="ion-margin" expand="block" color="primary" type="submit" [disabled]="formulario.invalid">
+            Transferir
+        </ion-button>
+
+    </form>
+</div>
