@@ -12,17 +12,18 @@
 
             <ion-buttons>
 
-                <ion-button (click)="createtransfer()">
+                <ion-button (click)="transferir(cuenta)">
                     <ion-icon slot="start" name="receipt-outline"></ion-icon>
-
                 </ion-button>
-                <ion-button slot="start" *ngIf="isAdmin" (click)="createSavingAccount(cuenta.usuario)">
+                <ion-button (click)="historial(cuenta)">
+                    <ion-icon slot="start" name="compass-outline"></ion-icon>
+                </ion-button>
+                <ion-button slot="start" *ngIf="isAdmin && monetary" (click)="createSavingAccount(cuenta)">
                     <ion-icon slot="start" name="add"></ion-icon>
 
                 </ion-button>
-                <ion-button slot="end" *ngIf="isAdmin" (click)="blockAccount(cuenta.usuario)">
+                <ion-button slot="end" *ngIf="isAdmin" (click)="blockAccount(cuenta)">
                     <ion-icon slot="start" name="ban-outline"></ion-icon>
-
                 </ion-button>
             </ion-buttons>
 

@@ -36,11 +36,11 @@
                     <ion-label> Q {{cuentaMonetaria.saldo}}</ion-label>
                 </ion-item-group>
                 <ion-buttons class="space-between">
-                    <ion-button (click)="transferir()">
+                    <ion-button (click)="transferir(cuentaMonetaria.numeroCuenta)">
                         <ion-icon slot="start" name="reader-outline"></ion-icon>
                         Transferir
                     </ion-button>
-                    <ion-button (click)="historial()">
+                    <ion-button (click)="historial(cuentaMonetaria)">
                         <ion-icon slot="start" name="compass-outline"></ion-icon>
                         Historial
                     </ion-button>
@@ -59,11 +59,11 @@
                         <ion-label> Q {{cuenta.saldo}}</ion-label>
                     </ion-item-group>
                     <ion-buttons class="space-between">
-                        <ion-button (click)="transferir()">
+                        <ion-button (click)="transferir(cuenta.numeroCuenta)">
                             <ion-icon slot="start" name="reader-outline"></ion-icon>
                             Transferir
                         </ion-button>
-                        <ion-button (click)="historial()">
+                        <ion-button (click)="historial(cuenta)">
                             <ion-icon slot="start" name="compass-outline"></ion-icon>
                             Historial
                         </ion-button>

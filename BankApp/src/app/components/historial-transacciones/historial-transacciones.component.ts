@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { Transferencia } from '../../interfaces/interfaces';
 
 @Component({
@@ -9,8 +10,11 @@ import { Transferencia } from '../../interfaces/interfaces';
 export class HistorialTransaccionesComponent implements OnInit {
   @Input() transferencias: Transferencia[];
   @Input() isAdmin: boolean;
-  constructor() { }
+  @Input() menu: boolean;
+  constructor(private modalController: ModalController) {}
 
   ngOnInit() {}
-
+  regresar() {
+    this.modalController.dismiss();
+  }
 }

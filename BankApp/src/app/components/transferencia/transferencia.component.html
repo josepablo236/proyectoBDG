@@ -1,40 +1,105 @@
-<div class="div-center">
-    <form #formulario="ngForm" (ngSubmit)="onSubmit(formulario)">
-        <ion-item-group>
-            <ion-item>
-                <ion-label position="floating">Cuenta del Destinatario</ion-label>
-                <ion-input maxlength='10' pattern="^([a-zA-Z0-9_\-\.]+)$" name="usuario" type="text" required>
-                </ion-input>
-            </ion-item>
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
 
-            <ion-item>
-                <ion-label>Cuenta a debitar</ion-label>
-                <ion-select (ionChange)="getItem($event)" interface="popover" name="rol" placeholder="Select One" required>
-                    <ion-list>
-                        <ion-select-option value="admin">cuenta 1</ion-select-option>
-                        <ion-select-option value="usuario">cuenta2 </ion-select-option>
-                    </ion-list>
-                </ion-select>
-            </ion-item>
-            <ion-item>
-                <ion-label>Cuenta a acreditar</ion-label>
-                <ion-select (ionChange)="getItem($event)" interface="popover" name="rol" placeholder="Select One" required>
-                    <ion-list>
-                        <ion-select-option value="admin">fav1</ion-select-option>
-                        <ion-select-option value="usuario">fav2</ion-select-option>
-                    </ion-list>
-                </ion-select>
-            </ion-item>
+            <ion-button slot="start" color="primary" (click)="regresar()">
+                <ion-icon slot="start" name="arrow-back-circle-outline"></ion-icon>
+                <ion-label>Regresar</ion-label>
+            </ion-button>
 
-            <ion-item>
-                <ion-label position="floating">Cantidad</ion-label>
-                <ion-input name="cantidad" type="number" required></ion-input>
-            </ion-item>
-        </ion-item-group>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <div *ngIf="!agregar" class="div-center">
+        <form (ngSubmit)="onSubmit()">
+            <ion-item-group>
+                <ion-item>
+                    <ion-label>Cuenta a debitar</ion-label>
+                    <ion-select (ionChange)="getuser($event,'remitente')" interface="popover" name="rol" placeholder="Select One" required>
+                        <ion-list *ngFor="let cuenta of cuentasUsuario">
+                            <ion-select-option [value]="cuenta.numeroCuenta">{{cuenta.numeroCuenta}}</ion-select-option>
+                        </ion-list>
+                    </ion-select>
+                </ion-item>
 
-        <ion-button class="ion-margin" expand="block" color="primary" type="submit" [disabled]="formulario.invalid">
-            Transferir
-        </ion-button>
 
-    </form>
-</div>
+                <ion-item *ngIf="numeroCuentaDest !== '' && !editCuentaDest">
+                    <ion-label>Cuenta a creditar</ion-label>
+                    <ion-input (ionChange)="getuser($event,'destinatario')" [value]="numeroCuentaDest" name="cuenta" pattern="^[a-zA-Z0-9\-\.]+$" type="text" required>
+                    </ion-input>
+                    <ion-button slot="end" (click)="editCuentaDest = true">
+                        <ion-icon slot="icon-only" name="pencil-outline"></ion-icon>
+                    </ion-button>
+                </ion-item>
+
+                <ion-item *ngIf="numeroCuentaDest === '' || editCuentaDest">
+                    <ion-label>Cuenta a acreditar</ion-label>
+                    <ion-select interface="popover" name="rol" placeholder="Select One" required>
+                        <ion-list (ionChange)="getuser($event, 'destinatario')" *ngFor="let cuenta of cuentasFav">
+                            <ion-select-option [value]="cuenta.numeroCuenta">{{cuenta.numeroCuenta}}</ion-select-option>
+                        </ion-list>
+                    </ion-select>
+                    <ion-button (click)="editCuentaDest = false" expand="block" fill="clear" shape="round">
+
+                        <ion-icon name="pencil-outline"></ion-icon>
+                    </ion-button>
+                </ion-item>
+                <ion-item>
+                    <ion-label>Usuario</ion-label>
+                    <ion-input class="ion-text-right" [value]="transferencia.destinatario" [disabled]="true" type="text">
+                    </ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating">Descipcion</ion-label>
+                    <ion-input maxlength='150' pattern="^([a-zA-Z0-9_\-\.]+)$" name="usuario" type="text">
+                    </ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label>Cantidad</ion-label>
+                    <ion-input type="number" required></ion-input>
+                </ion-item>
+            </ion-item-group>
+
+            <ion-button class="ion-margin" expand="block" color="primary" type="submit">
+                Transferir
+            </ion-button>
+            <ion-button (click)="agregar = true" expand="block" fill="clear" shape="round">
+                <ion-icon slot="start" name="add"></ion-icon>
+                Agregar cuenta a favoritos
+            </ion-button>
+        </form>
+    </div>
+
+    <div *ngIf="agregar" class="div-center">
+        <form (ngSubmit)="onSubmitNewFav()">
+            <ion-item-group>
+                <ion-item>
+                    <ion-label position="floating">Numero de cuenta</ion-label>
+                    <ion-input (ionChange)="getuser($event,'destinatario')" [value]="numeroCuentaDest" name="cuenta" pattern="^[a-zA-Z0-9\-\.]+$" type="text" required>
+                    </ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label>Usuario</ion-label>
+                    <ion-input class="ion-text-right" [value]="transferencia.destinatario" [disabled]="true" type="text">
+                    </ion-input>
+                </ion-item>
+
+
+            </ion-item-group>
+
+            <ion-buttons class="ion-margin" slot="start">
+                <ion-button color="danger" (click)="cancelar()">
+                    Cancelar
+                </ion-button>
+                <ion-button (click)="agregarfav()" color="primary" type="submit">
+                    Agregar
+                </ion-button>
+            </ion-buttons>
+
+
+
+
+        </form>
+    </div>
+</ion-content>

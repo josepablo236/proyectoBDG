@@ -4,63 +4,67 @@ import { Transferencia, User } from '../../interfaces/interfaces';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { DynamoDBService } from '../../services/dynamo-db.service';
+import { DataLocalService } from '../../services/data-local.service';
 
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
-  styleUrls: ['tab3.page.scss']
+  styleUrls: ['tab3.page.scss'],
 })
 export class Tab3Page {
-  transferencias: Transferencia[]= [];
-  isAdmin = false;
-  actualUser: string;
+  transferencias: Transferencia[] = [];
+  currentUser = {
+    usuario: undefined,
+    isAdmin: false,
+  };
   bubbles = true;
-  textoBuscar='';
-  constructor(private db: DynamoDBService,
-              private router: Router,
-              private toastController: ToastController) {
-                this.init();
-  }
-  async init(){
+  textoBuscar = '';
+  constructor(
+    private db: DynamoDBService,
+    private storage: DataLocalService,
+    private router: Router,
+    private toastController: ToastController
+  ) {
     this.bubbles = true;
-    this.isAdmin = await this.db.isAdmin;
-    this.actualUser = await this.db.currentUser;
-    if (this.isAdmin) {
-      this.db.getTransfers().then(resp =>{
+    this.init();
+  }
+  async init() {
+    this.currentUser = await this.storage.getCurrentUser();
+    if (this.currentUser.isAdmin) {
+      this.db.getTransfers().then((resp) => {
         this.transferencias = resp.data['transferencias'];
-        });
-      }
-      else{
-        this.db.getUserTrans(this.actualUser).then(resp =>{
-          this.transferencias = resp.data['trans'];
-          });
-      }
-      this.bubbles = false;
+      });
+    } else {
+      this.db.getUserTrans(this.currentUser.usuario).then((resp) => {
+        this.transferencias = resp.data['trans'];
+      });
+    }
+    this.bubbles = false;
   }
 
-  onSearchChange(event){
+  onSearchChange(event) {
     this.bubbles = true;
     this.textoBuscar = event.detail.value;
-    if(true){
-    setTimeout(() => {
-      //this.transferencias = db.transfilter
+    if (true) {
+      setTimeout(() => {
+        //this.transferencias = db.transfilter
       }, 1000);
-    }else{
+    } else {
       setTimeout(() => {
         this.bubbles = false;
         //this.transferencias = db.transfavoritas
-        }, 500);
+      }, 500);
     }
-    if(this.textoBuscar === ''){
+    if (this.textoBuscar === '') {
       this.bubbles = false;
     }
   }
-  async ionViewWillEnter(){
-    const user = await this.db.currentUser;
-    if( user === '' || user === undefined){
-        await this.presentToast('Sesion expirada','danger');
-        this.router.navigate(['/']);
-    }else{
+  async ionViewWillEnter() {
+    this.currentUser = await this.storage.getCurrentUser();
+    if (this.currentUser.usuario === undefined) {
+      await this.presentToast('Sesion expirada', 'danger');
+      this.router.navigate(['/']);
+    } else {
       this.init();
     }
   }

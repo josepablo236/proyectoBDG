@@ -1,75 +1,106 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component } from '@angular/core';
 import { DynamoDBService } from '../../services/dynamo-db.service';
-import { Cuenta } from '../../interfaces/interfaces';
+import { Cuenta, User } from '../../interfaces/interfaces';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import {
+  AlertController,
+  ModalController,
+  ToastController,
+} from '@ionic/angular';
 import { v4 as uuidv4 } from 'uuid';
+import { TransferenciaComponent } from '../../components/transferencia/transferencia.component';
+import { DataLocalService } from '../../services/data-local.service';
 
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
-  styleUrls: ['tab2.page.scss']
+  styleUrls: ['tab2.page.scss'],
 })
 export class Tab2Page {
   bubbles = false; //variable para mostrar el spinnig bubbles
-  isAdmin= false;
-  textoBuscar= '';
-  actualUser: string;
-  cuentas: Cuenta[] =[];
-  cuentasAhorro: Cuenta[] =[];
-  constructor(private db: DynamoDBService,
-              private router: Router,
-              private toastController: ToastController) {
-                this.init();
-              }
-  getFavorites(){
+  textoBuscar = '';
+  currentUser = {
+    usuario: undefined,
+    isAdmin: false,
+  };
+  cuentas: Cuenta[] = [];
+  cuentasAhorro: Cuenta[] = [];
+  constructor(
+    private db: DynamoDBService,
+    private storage: DataLocalService,
+    private router: Router,
+    private toastController: ToastController,
+    private alertController: AlertController,
+    private modalController: ModalController
+  ) {
+    this.bubbles = true;
+    this.init();
   }
 
-  onSearchChange(event){
+  doRefresh(event) {
+    setTimeout(async () => {
+      await this.db.getMonetaryAcounts().then((resp) => {
+        this.cuentas = resp.data['monetarias'];
+      });
+      await this.db.getAcounts().then((resp) => {
+        this.cuentasAhorro = resp.data['cuentas'];
+      });
+      event.target.complete();
+    }, 1500);
+  }
+  getFavorites() {}
+
+  onSearchChange(event) {
     this.bubbles = true;
     this.textoBuscar = event.detail.value;
-    if(true){
-    setTimeout(() => {
-      }, 1000);
-    }else{
+    if (true) {
+      setTimeout(() => {}, 1000);
+    } else {
       setTimeout(() => {
         this.bubbles = false;
-        }, 500);
+      }, 500);
     }
-    if(this.textoBuscar === ''){
+    if (this.textoBuscar === '') {
       this.bubbles = false;
     }
   }
-  createTransfer(){
+  createTransfer() {
+    this.createTransfer();
+  }
 
-  }
-  transferir(usuario: string){}
-  historial(){}
-  blockAccount(usuario: string){}
-  async init(){
-    this.bubbles = true;
-    this.isAdmin = await this.db.isAdmin;
-    this.actualUser = await this.db.currentUser;
-    if (this.isAdmin) {
-      this.db.getMonetaryAcounts().then(resp =>{
-        this.cuentas =(resp.data['monetarias']);
-        });
-        this.db.getAcounts().then(resp =>{
-          this.cuentasAhorro =(resp.data['cuentas']);
-          });
-      }
-      else{
-        //metodo para llamar las favoritas de los usuarios
-      }
-      this.bubbles = false;
-  }
-  async ionViewWillEnter(){
-    const user = await this.db.currentUser;
-    if( user === '' || user === undefined){
-        await this.presentToast('Sesion expirada','danger');
-        this.router.navigate(['/']);
+  async ionViewWillEnter() {
+    this.currentUser = await this.storage.getCurrentUser();
+    if (this.currentUser.usuario === undefined) {
+      await this.presentToast('Sesion expirada', 'danger');
+      this.router.navigate(['/']);
+    } else {
+      this.init();
     }
+  }
+  async init() {
+    this.currentUser = await this.storage.getCurrentUser();
+    console.log(this.currentUser);
+    if (this.currentUser.isAdmin) {
+      this.db.getMonetaryAcounts().then((resp) => {
+        this.cuentas = resp.data['monetarias'];
+      });
+      this.db.getAcounts().then((resp) => {
+        this.cuentasAhorro = resp.data['cuentas'];
+      });
+    } else if (this.currentUser.usuario !== undefined) {
+      //metodo para llamar las favoritas de los usuarios
+    }
+    this.bubbles = false;
+  }
+  //Modal de crear transferencia
+  async mostrarModalCreate() {
+    const modal = await this.modalController.create({
+      component: TransferenciaComponent,
+      componentProps: {},
+    });
+    await modal.present();
+    modal.onWillDismiss();
   }
   async presentToast(_message: string, _color: string) {
     const toast = await this.toastController.create({
@@ -80,17 +111,4 @@ export class Tab2Page {
     });
     toast.present();
   }
-
-  doRefresh(event){
-    setTimeout(async() => {
-      await this.db.getMonetaryAcounts().then(resp =>{
-        this.cuentas =(resp.data['monetarias']);
-        });
-      await this.db.getAcounts().then(resp =>{
-        this.cuentasAhorro =(resp.data['cuentas']);
-        });
-      event.target.complete();
-    }, 1500);
-  }
-
 }

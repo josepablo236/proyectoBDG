@@ -20,54 +20,55 @@ export class UserInfoPage implements OnInit {
   confirmPassword: string;
   message: string;
   imgPath: any;
-  constructor(private modalController: ModalController,
-              private db: DynamoDBService) {
-  }
+  constructor(
+    private modalController: ModalController,
+    private db: DynamoDBService
+  ) {}
 
   ngOnInit() {
-    if(this.user.img === undefined){
-      this.imgPath= '../../../assets/images/profile-photo/empty.png';
-    }
-    else{
+    if (this.user.img === undefined) {
+      this.imgPath = '../../../assets/images/profile-photo/empty.png';
+    } else {
       this.imgPath = this.user.img;
     }
     console.log(this.user);
   }
-  regresar(){
+  regresar() {
     this.modalController.dismiss();
     this.alert = false;
   }
 
-  cambiarPass( formulario: NgForm){
+  cambiarPass(formulario: NgForm) {
     this.alert = false;
-    if(this.password === this.confirmPassword)
-    {
-      if(this.password.length > 4){
-        const ciphertext = CryptoJS.AES.encrypt(this.password, 'secret key 123').toString();
+    if (this.password === this.confirmPassword) {
+      if (this.password.length > 4) {
+        const ciphertext = CryptoJS.AES.encrypt(
+          this.password,
+          'secret key 123'
+        ).toString();
         //Modificar contraseña de usuario
-        this.db.modifyPass(this.user.usuario,'password', ciphertext).then(resp =>{
-          //Validar si resp es true
-          if(resp){
-            this.error = false;
-            this.alert = true;
-            this.message = 'Contraseña actualizada';
-          }
-          else{
-            this.error = true;
-            this.alert = true;
-            this.message = 'Error al actualizar';
-          }
-        });
+        this.db
+          .modifyPass(this.user.usuario, 'password', ciphertext)
+          .then((resp) => {
+            //Validar si resp es true
+            if (resp) {
+              this.error = false;
+              this.alert = true;
+              this.message = 'Contraseña actualizada';
+            } else {
+              this.error = true;
+              this.alert = true;
+              this.message = 'Error al actualizar';
+            }
+          });
         formulario.resetForm();
-      }
-      else{
+      } else {
         this.error = true;
         this.alert = true;
         this.message = 'La contraseña es muy corta';
         formulario.resetForm();
       }
-    }
-    else{
+    } else {
       this.error = true;
       this.alert = true;
       this.message = 'Las contraseñas no coinciden';
@@ -75,39 +76,42 @@ export class UserInfoPage implements OnInit {
     }
   }
 
-  doRefresh(event){
-    setTimeout(async() => {
-      await this.db.getUserData(this.user.usuario).then(resp =>{
-        this.user=  resp.data;
+  doRefresh(event) {
+    setTimeout(async () => {
+      await this.db.getUserData(this.user.usuario).then((resp) => {
+        this.user = resp.data;
         this.alert = false;
-        });
+      });
       event.target.complete();
     }, 1500);
   }
 
-  async actualizarUser( formulario: NgForm) {
-    if(this.user !== null && this.user.rol !=='' && this.user.nacimiento !== null){
-      await this.db.createUser(this.user).then(response =>{
+  async actualizarUser(formulario: NgForm) {
+    if (
+      this.user !== null &&
+      this.user.rol !== '' &&
+      this.user.nacimiento !== null
+    ) {
+      await this.db.createUser(this.user).then((response) => {
         console.log(response);
-        if(response){
+        if (response) {
           this.error = false;
           this.alert = true;
           this.message = 'Información actualizada';
-        }else{
+        } else {
           this.error = true;
           this.alert = true;
           this.message = 'Error al actualizar';
         }
       });
-    }else{
+    } else {
       this.error = true;
       this.alert = true;
       this.message = 'Llena todos los campos';
     }
   }
-  salirModal(){
+  salirModal() {
     this.modalController.dismiss();
     this.alert = false;
   }
-
 }

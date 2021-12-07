@@ -6,15 +6,25 @@ import { TransferenciaComponent } from './transferencia/transferencia.component'
 import { AlertComponent } from './alert/alert.component';
 import { UploadImgComponent } from './upload-img/upload-img.component';
 import { CuentaComponent } from './cuenta/cuenta.component';
-
-
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [ HistorialTransaccionesComponent,TransferenciaComponent, AlertComponent, UploadImgComponent,CuentaComponent],
-  exports: [ HistorialTransaccionesComponent,TransferenciaComponent, AlertComponent, UploadImgComponent,CuentaComponent],
-  imports: [
-    CommonModule,IonicModule
-  ]
+  declarations: [
+    HistorialTransaccionesComponent,
+    TransferenciaComponent,
+    AlertComponent,
+    UploadImgComponent,
+    CuentaComponent,
+    TransferenciaComponent,
+  ],
+  exports: [
+    HistorialTransaccionesComponent,
+    TransferenciaComponent,
+    AlertComponent,
+    UploadImgComponent,
+    CuentaComponent,
+    TransferenciaComponent,
+  ],
+  imports: [CommonModule, IonicModule, FormsModule],
 })
-export class ComponentsModule {
-}
+export class ComponentsModule {}
