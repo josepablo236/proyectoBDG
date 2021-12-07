@@ -13,6 +13,8 @@ export class UploadImgComponent implements OnInit {
 
   FileName: string;
   imgPath: any;
+  error: boolean;
+  message: string;
 
   isImgUploaded: boolean;
   
@@ -26,10 +28,16 @@ export class UploadImgComponent implements OnInit {
     const file = event.item(0)
 
     if (file.type.split('/')[0] !== 'image') { 
-      console.log('File type is not supported!')
+      this.error = true;
+      this.message = "Tipo de archivo no soportado";
       return;
     }
-
+    if(file.size > 400000){
+      this.error = true;
+      this.message = "La imagen debe ser menor a 200 kb";
+      return;
+    }
+    this.error = false;
     this.FileName = file.name;
     let base64 = await this.convertBase64(file);
      this.isImgUploaded = true;

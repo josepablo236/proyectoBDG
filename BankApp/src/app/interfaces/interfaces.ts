@@ -17,6 +17,13 @@ export interface Cuenta {
     estado: string;
 }
 
+export interface Favorito {
+    numeroCuenta: string;
+    usuario: string;
+    estado: string;
+    tipo: string;
+}
+
 export interface Transferencia {
     id: string;
     remitente: string;

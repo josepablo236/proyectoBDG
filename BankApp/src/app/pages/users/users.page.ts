@@ -3,7 +3,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { DynamoDBService } from 'src/app/services/dynamo-db.service';
-import { User } from '../../interfaces/interfaces';
+import { User, Cuenta } from '../../interfaces/interfaces';
 import * as CryptoJS from 'crypto-js';
 import { CreateUsersPage } from '../create-users/create-users.page';
 import { UserInfoPage } from '../user-info/user-info.page';
@@ -45,12 +45,55 @@ export class UsersPage implements OnInit {
       this.users=  resp.data['usuarios'];
       });
   }
-  eliminarUsuario(user: User){
-    this.db.deleteUser(user.usuario);
+  
+  doRefresh(event){
+    setTimeout(async() => {
+      await this.db.getUsers().then(resp =>{
+        this.users=  resp.data['usuarios'];
+        });
+      event.target.complete();
+    }, 1500);
+  }
+
+  async eliminarUsuario(user: User){
+    //Eliminar al usuario
+    await this.db.deleteUser(user.usuario).then(resp =>{
+      if(resp){
+        this.presentToast('Usuario eliminado','success');
+      }
+      else{
+        this.presentToast('Error al eliminar','danger');
+      }
+    });
+    //Eliminar cuenta monetaria del usuario
+    await this.db.deleteMonetary(user.usuario).then(resp =>{
+      if(resp){
+        this.presentToast('Cuenta monetaria eliminada','success');
+      }
+      else{
+        this.presentToast('Error al eliminar cuenta monetaria','danger');
+      }
+    });
+
+    //Eliminar cuentas de ahorro del usuario
+    await this.db.getUserAccounts(user.usuario).then(r =>{
+      let cuentas: Cuenta[] = r.data['cuentas'];
+      console.log(cuentas);
+      if(cuentas.length > 0){
+        for(let cuenta of cuentas){
+          this.db.deleteAccount(cuenta.numeroCuenta).then(resp =>{
+            if(resp){
+              this.presentToast('Cuenta eliminada','success');
+            }
+            else{
+              this.presentToast('Error al eliminar cuenta','danger');
+            }
+          });
+        }
+      }
+    });
   }
   cerrarSesion(){
-    this.db.currentUser = '';
-    this.db.isAdmin = false;
     this.presentAlertConfirm();
   }
   async ionViewWillEnter(){
@@ -80,12 +123,12 @@ export class UsersPage implements OnInit {
         {
           text: 'Cancelar',
           role: 'cancel',
-          cssClass: 'secondary',
-          handler: (blah) => {
-          }
+          cssClass: 'secondary'
         }, {
           text: 'Aceptar',
           handler: () => {
+            this.db.currentUser = '';
+            this.db.isAdmin = false;
             this.router.navigate(['/']);
           }
         }

@@ -75,6 +75,16 @@ export class UserInfoPage implements OnInit {
     }
   }
 
+  doRefresh(event){
+    setTimeout(async() => {
+      await this.db.getUserData(this.user.usuario).then(resp =>{
+        this.user=  resp.data;
+        this.alert = false;
+        });
+      event.target.complete();
+    }, 1500);
+  }
+
   async actualizarUser( formulario: NgForm) {
     if(this.user !== null && this.user.rol !=='' && this.user.nacimiento !== null){
       await this.db.createUser(this.user).then(response =>{

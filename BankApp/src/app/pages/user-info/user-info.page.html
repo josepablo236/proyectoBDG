@@ -15,7 +15,14 @@
     </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
-
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content
+          pullingIcon="chevron-down-circle-outline"
+          pullingText="Actualizar"
+          refreshingSpinner="circles"
+          refreshingText="Actualizando...">
+        </ion-refresher-content>
+    </ion-refresher>
     <ion-grid class="div-center" fixed *ngIf="edit">
         <h1>Cambiar contraseña</h1>
         <ion-row>
@@ -46,7 +53,8 @@
         <ion-row *ngIf="!cambiarFoto">
             <ion-col size="4">
                 <ion-card class="poster">
-                    <img [src]="imgPath" alt="inexistente lol">
+                    <img *ngIf="user.img" [src]="user.img">
+                    <img *ngIf="!user.img" src="../../../assets/images/profile-photo/empty.png">
                 </ion-card>
                 <ion-button (click)="cambiarFoto = true; alert = false" expand="block" fill="clear" shape="round">
                     Cambiar foto

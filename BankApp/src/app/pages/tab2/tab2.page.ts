@@ -81,4 +81,16 @@ export class Tab2Page {
     toast.present();
   }
 
+  doRefresh(event){
+    setTimeout(async() => {
+      await this.db.getMonetaryAcounts().then(resp =>{
+        this.cuentas =(resp.data['monetarias']);
+        });
+      await this.db.getAcounts().then(resp =>{
+        this.cuentasAhorro =(resp.data['cuentas']);
+        });
+      event.target.complete();
+    }, 1500);
+  }
+
 }

@@ -18,8 +18,15 @@
 
 </ion-header>
 <ion-content [fullscreen]="true">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content
+          pullingIcon="chevron-down-circle-outline"
+          pullingText="Actualizar"
+          refreshingSpinner="circles"
+          refreshingText="Actualizando...">
+        </ion-refresher-content>
+      </ion-refresher>
     <ion-list>
-
         <ion-item *ngFor="let user of users">
             <ion-buttons slot="end">
                 <ion-button color="primary" fill="clear" slot="end" (click)="mostrarModalUsuario(user)">
@@ -32,7 +39,8 @@
 
 
             <ion-avatar slot="start">
-                <img src="../../../assets/images/profile-photo/empty.png">
+                <img *ngIf="user.img" [src]="user.img">
+                <img *ngIf="!user.img" src="../../../assets/images/profile-photo/empty.png">
             </ion-avatar>
             <ion-label>
                 <h2>{{user.usuario}}</h2>

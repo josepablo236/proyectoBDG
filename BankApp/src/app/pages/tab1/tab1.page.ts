@@ -70,7 +70,6 @@ export class Tab1Page {
     this.user= this.users.filter(user => user.usuario ===  this.db.currentUser)[0];
   }
   async mostrarModalUsuario(user) {
-    await this.getcurrentUser();
     const modal = await this.modalCtrl.create({
       component: UserInfoPage,
       componentProps: {

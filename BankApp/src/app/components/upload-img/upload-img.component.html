@@ -3,6 +3,8 @@
     <ion-card-title>Selecciona una imagen</ion-card-title>
   </ion-card-header>
 
+  <app-alert *ngIf="error" [message]="message" [error]="error"></app-alert>
+
   <ion-button color="primary">
     <input type="file" class="upload" (change)="fileUpload($event.target.files)" />
   </ion-button>

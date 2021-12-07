@@ -52,7 +52,7 @@ export class CreateUsersPage implements OnInit {
     cuenta.numeroCuenta = uuidv4();
 
     cuenta.saldo = 0;
-    if (!this.checked) {
+    if (this.checked) {
       //cuenta de ahorro creada
       this.db.createAccount(cuenta);
     }

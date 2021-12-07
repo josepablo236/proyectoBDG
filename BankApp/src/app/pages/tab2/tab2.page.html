@@ -21,6 +21,14 @@
 
 </ion-toolbar>
 <ion-content [fullscreen]="true" class="ion-padding">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content
+          pullingIcon="chevron-down-circle-outline"
+          pullingText="Actualizar"
+          refreshingSpinner="circles"
+          refreshingText="Actualizando...">
+        </ion-refresher-content>
+      </ion-refresher>
 
     <ion-grid *ngIf="bubbles" fixed>
         <ion-row>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
 import * as CryptoJS from 'crypto-js';
-import { User, Cuenta, Transferencia } from '../interfaces/interfaces';
+import { User, Cuenta, Transferencia, Favorito } from '../interfaces/interfaces';
 
 const urlAPI = 'https://091gij42xe.execute-api.us-east-2.amazonaws.com/proyecto';
 
@@ -52,6 +52,12 @@ export class DynamoDBService {
     }
   }
 
+  //Traer datos de un usuario
+  async getUserData(usuario: string){
+    const query = `/user?usuario=${usuario}`;
+    return this.getQuery<User>(query);
+  }
+
   //Función para crear usuarios
   async createUser(usuario: User){
     const url = urlAPI + '/user';
@@ -88,11 +94,8 @@ export class DynamoDBService {
 
   //Función para eliminar usuario
   async deleteUser(_usuario: string){
-    const request = {
-      usuario: _usuario
-    };
-    const url = urlAPI + '/user';
-    return this.deleteQuery(url, request);
+    const query = `/user?usuario=${_usuario}`;
+    return this.deleteQuery(query);
   }
 
   //Funcion para crear cuenta monetaria
@@ -133,11 +136,8 @@ export class DynamoDBService {
 
   //Función para eliminar cuenta monetaria
   async deleteMonetary(_usuario: string){
-    const request = {
-      usuario: _usuario
-    };
-    const url = urlAPI + '/monetary-account';
-    return this.deleteQuery(url, request);
+    const query = `/monetary-account?usuario=${_usuario}`;
+    return this.deleteQuery(query);
   }
 
   //Funcion para crear cuenta ahorros
@@ -177,14 +177,10 @@ export class DynamoDBService {
   }
 
   //Función para eliminar cuenta ahorro
-  async deleteAccount(cuenta: string){
-    const request = {
-      numeroCuenta: cuenta
-    };
-    const url = urlAPI + '/savings-account';
-    return this.deleteQuery(url, request);
+  async deleteAccount(cuenta: string){    
+    const query = `/savings-account?numeroCuenta=${cuenta}`;
+    return this.deleteQuery(query);
   }
-
 
   //Funcion para crear transferencia
   async createTrans(trans: Transferencia){
@@ -210,6 +206,34 @@ export class DynamoDBService {
     return this.getQuery<Transferencia>(query);
   }
 
+  //Funcion para crear cuenta ahorros
+  async createFavorite(cuenta: Favorito){
+    const url = urlAPI + '/favorite';
+    await axios.post(url, cuenta);
+    return true;
+  }
+
+  //Función para traer cuentas ahorros por usuario
+  async getUserFavorites(usuario: string){
+    const query = `/user-favorites?usuario=${usuario}`;
+    return this.getQuery<Cuenta[]>(query);
+  }
+
+  //Función para traer cuenta ahorro con numero de cuenta
+  async getFavorite(numCuenta: string){
+    const query = `/favorite?numeroCuenta=${numCuenta}`;
+    return this.getQuery<Cuenta>(query);
+  }
+
+  //Función para eliminar de favoritos
+  async deleteFavorite(cuenta: string){
+    const request = {
+      numeroCuenta: cuenta
+    };
+    const url = urlAPI + '/favorite';
+    return this.deleteQuery(url);
+  }
+
   //Metodo para get
   private async getQuery<T>(query: string){
     query = urlAPI + query;
@@ -232,9 +256,10 @@ export class DynamoDBService {
   }
 
   //Metodo para delete
-  private async deleteQuery(query: string, body: any){
+  private async deleteQuery(query: string){
     let success: boolean;
-    await axios.delete(query, body).then(resp =>{
+    const url = urlAPI + query;
+    await axios.delete(url).then(resp =>{
       if(resp.status === 200){
         success = true;
       }
