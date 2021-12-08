@@ -36,6 +36,7 @@ export class CuentaComponent implements OnInit {
       numeroCuenta: uuidv4(),
       saldo: 0,
       estado: 'activa',
+      tipo: 'ahorro'
     };
 
     this.presentAlertConfirm(

@@ -28,6 +28,7 @@ export class Tab1Page {
     usuario: '',
     saldo: 0,
     estado: 'activa',
+    tipo: '',
   };
   cuentas: Cuenta[] = [];
   transferencias: Transferencia[] = [];
@@ -92,6 +93,17 @@ export class Tab1Page {
       await this.getpersonalAccounts();
     }
     this.bubbles = false;
+  }
+
+  doRefresh(event) {
+    setTimeout(async () => {
+      await this.getcurrentUser();
+      if (this.user !== undefined) {
+        await this.getpersonalAccounts();
+      }
+      this.bubbles = false;
+      event.target.complete();
+    }, 1500);
   }
 
   async getpersonalAccounts() {

@@ -41,19 +41,19 @@ export class CreateUsersPage implements OnInit {
   async crearCuentas(){
     const cuenta: Cuenta = {
       usuario: this.user.usuario,
-      numeroCuenta: uuidv4(),
+      numeroCuenta: uuidv4().substring(0, 8),
       saldo: 1000.00,
-      estado: 'activa'
+      estado: 'activa',
+      tipo: 'monetaria'
     };
 
     //metodo de la db para crear cuentas monetarias
     this.db.createMonetary(cuenta);
-
-    cuenta.numeroCuenta = uuidv4();
-
-    cuenta.saldo = 0;
     if (this.checked) {
       //cuenta de ahorro creada
+      cuenta.numeroCuenta = uuidv4().substring(0, 8);
+      cuenta.tipo = 'ahorro';
+      cuenta.saldo = 0;
       this.db.createAccount(cuenta);
     }
   }
@@ -83,12 +83,12 @@ export class CreateUsersPage implements OnInit {
   getDateItem(event){
     //
     this.user.nacimiento = formatDate(event.detail.value, 'yyyy-MM-dd', 'en-US');
-    console.log(this.user.nacimiento);
   }
 
   isChecked(event){
-    this.checked = event.currentTarget.checked;
+    this.checked = !event.currentTarget.checked;
   }
+
   salirModal(){
     this.modalCtrl.dismiss();
   }

@@ -14,11 +14,12 @@
     <div *ngIf="!agregar" class="div-center">
         <form (ngSubmit)="onSubmit()">
             <ion-item-group>
+                <app-alert *ngIf="alert" [message]="message" [error]="error"></app-alert>
                 <ion-item>
                     <ion-label>Cuenta a debitar</ion-label>
                     <ion-select (ionChange)="getuser($event,'remitente')" interface="popover" name="rol" placeholder="Select One" required>
                         <ion-list *ngFor="let cuenta of cuentasUsuario">
-                            <ion-select-option [value]="cuenta.numeroCuenta">{{cuenta.numeroCuenta}}</ion-select-option>
+                            <ion-select-option [value]="cuenta.numeroCuenta">{{cuenta.numeroCuenta.substring(0,8)}}</ion-select-option>
                         </ion-list>
                     </ion-select>
                 </ion-item>
@@ -52,12 +53,12 @@
                 </ion-item>
                 <ion-item>
                     <ion-label position="floating">Descipcion</ion-label>
-                    <ion-input maxlength='150' pattern="^([a-zA-Z0-9_\-\.]+)$" name="usuario" type="text">
+                    <ion-input maxlength='150' (ionChange)="setDescription($event)" type="text">
                     </ion-input>
                 </ion-item>
                 <ion-item>
                     <ion-label>Cantidad</ion-label>
-                    <ion-input type="number" required></ion-input>
+                    <ion-input (ionChange)="setCantidad($event)" type="number" required></ion-input>
                 </ion-item>
             </ion-item-group>
 

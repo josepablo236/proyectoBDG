@@ -15,6 +15,7 @@ export interface Cuenta {
   usuario: string;
   saldo: number;
   estado: string;
+  tipo: string;
 }
 
 export interface Favorito {
