@@ -11,8 +11,10 @@
             </ion-item-group>
 
             <ion-buttons>
-
-                <ion-button (click)="transferir(cuenta)">
+                <ion-button *ngIf="!isAdmin" (click)="transferir(cuenta)">
+                    <ion-icon slot="start" name="receipt-outline"></ion-icon>
+                </ion-button>
+                <ion-button *ngIf="isAdmin" (click)="acreditar(cuenta)">
                     <ion-icon slot="start" name="receipt-outline"></ion-icon>
                 </ion-button>
                 <ion-button (click)="historial(cuenta)">

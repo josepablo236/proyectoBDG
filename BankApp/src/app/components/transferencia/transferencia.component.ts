@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit, Input } from '@angular/core';
-import { Cuenta, Transferencia } from '../../interfaces/interfaces';
+import { Cuenta, Transferencia, Favorito } from '../../interfaces/interfaces';
 import { DynamoDBService } from '../../services/dynamo-db.service';
 import { v4 as uuidv4 } from 'uuid';
 import { ModalController, ToastController } from '@ionic/angular';
@@ -14,7 +14,7 @@ import { formatDate } from '@angular/common';
 export class TransferenciaComponent implements OnInit {
   @Input() user: string;
   @Input() cuentasUsuario: Cuenta[];
-  @Input() cuentasFav: Cuenta[];
+  @Input() cuentasFav: Favorito[];
   @Input() numeroCuentaDest: string;
   cuentaDestino: Cuenta;
   cuentaEmisora: Cuenta;
@@ -43,7 +43,9 @@ export class TransferenciaComponent implements OnInit {
     private modalController: ModalController
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.cuentasFav);
+  }
 
   regresar() {
     this.modalController.dismiss();
@@ -76,13 +78,6 @@ export class TransferenciaComponent implements OnInit {
       this.message = 'La cuenta destino está bloqueada';
       return;
     }
-    //Validar que si tenga esa cantidad de dinero para transferir
-    if (this.cuentaEmisora.saldo < this.transferencia.cantidad) {
-      this.alert = true;
-      this.error = true;
-      this.message = 'Saldo insuficiente para transferir';
-      return;
-    }
     //Validar que si es la misma
     if (this.cuentaEmisora.numeroCuenta === this.transferencia.cuentaDest) {
       this.alert = true;
@@ -90,12 +85,46 @@ export class TransferenciaComponent implements OnInit {
       this.message = 'La cuenta destino no puede ser la misma que la remitente';
       return;
     }
-    if(!this.error){
+    if (!this.error) {
       this.transferir();
     }
- 
+    //Validar que si tenga esa cantidad de dinero para transferir
+    if (Number(this.cuentaEmisora.saldo) < Number(this.transferencia.cantidad)) {
+      this.alert = true;
+      this.error = true;
+      this.message = 'Saldo insuficiente para transferir';
+      console.log(this.cuentaEmisora.saldo);
+      console.log(this.transferencia.cantidad);
+      return;
+    }
   }
-  async onSubmitNewFav() {}
+  async onSubmitNewFav() {
+    this.alert = false;
+    this.error = false;
+    if(this.cuenta.usuario === undefined){
+      this.alert = true;
+      this.error = true;
+      this.message = 'La cuenta ingresada no existe'
+    }
+    let fav: Favorito = {
+      numeroCuenta: this.cuenta.numeroCuenta,
+      usuario: this.user,
+      usuarioCuenta: this.cuenta.usuario,
+      estado: this.cuenta.estado,
+      tipo: this.cuenta.tipo,
+    };
+    this.db.createFavorite(fav).then((response) => {
+      if (response) {
+        this.alert = true;
+        this.error = false;
+        this.message = 'Cuenta agregada a favoritos';
+      } else {
+        this.alert = true;
+        this.error = true;
+        this.message = 'Error al agregar a favoritos';
+      }
+    });
+  }
   agregarfav() {
     this.agregar = false;
   }
@@ -103,9 +132,10 @@ export class TransferenciaComponent implements OnInit {
     this.agregar = false;
   }
 
-  getuser(event, tipo: string) {
+  async getuser(event, tipo: string) {
     if (event.detail.value !== '') {
-      this.getpersonalAccounts(event.detail.value, tipo);
+      console.log("ONCHANGEEEE",event.detail.value);
+      await this.getpersonalAccounts(event.detail.value, tipo);
     }
   }
 
@@ -120,7 +150,7 @@ export class TransferenciaComponent implements OnInit {
   async ionViewWillEnter() {
     if (this.numeroCuentaDest !== '') {
       console.log(this.numeroCuentaDest);
-      this.getpersonalAccounts(this.numeroCuentaDest, 'destinatario');
+      await this.getpersonalAccounts(this.numeroCuentaDest, 'destinatario');
     }
   }
 
@@ -137,12 +167,15 @@ export class TransferenciaComponent implements OnInit {
 
     if (tipo === 'destinatario') {
       this.cuentaDestino = this.cuenta;
+      console.log('Destino', this.cuentaDestino);
       this.transferencia.cuentaDest = this.cuentaDestino.numeroCuenta;
       this.transferencia.destinatario = this.cuentaDestino.usuario;
     } else if (tipo === 'remitente') {
       this.cuentaEmisora = this.cuenta;
+      console.log("Emisora",this.cuentaEmisora);
       this.transferencia.cuentaRemi = this.cuentaEmisora.numeroCuenta;
       this.transferencia.remitente = this.cuentaEmisora.usuario;
+      console.log("Transfer", this.transferencia);
     }
 
     this.transferencia.fecha = formatDate(
@@ -153,34 +186,34 @@ export class TransferenciaComponent implements OnInit {
     console.log(this.transferencia);
   }
 
-  transferir() {
+  async transferir() {
     //Crear transferencia
-    this.db.createTrans(this.transferencia).then((response) => {
+    await this.db.createTrans(this.transferencia).then(async(response) => {
       if (response) {
         console.log(this.cuentaDestino.tipo);
         //Modificar saldo en cuenta destino
         if (this.cuentaDestino.tipo === 'monetaria') {
           //Modificar saldo de cuenta monetaria
           let nuevoSaldo = Number(this.cuentaDestino.saldo) + Number(this.transferencia.cantidad);
-          this.db.modifyMonetary(this.cuentaDestino.usuario,'saldo', nuevoSaldo.toString());
+          await this.db.modifyMonetary(this.cuentaDestino.usuario,'saldo', nuevoSaldo.toString());
         }
         if (this.cuentaDestino.tipo === 'ahorro') {
           //Modificar saldo de cuenta ahorro
           let nuevoSaldo = Number(this.cuentaDestino.saldo) + Number(this.transferencia.cantidad);
           console.log(nuevoSaldo);
-          this.db.modifyAccount(this.cuentaDestino.numeroCuenta,'saldo', nuevoSaldo.toString());
+          await this.db.modifyAccount(this.cuentaDestino.numeroCuenta,'saldo', nuevoSaldo.toString());
         }
         //Modificar saldo en cuenta remitente
         if(this.cuentaEmisora.tipo === 'monetaria'){
           //Modificar saldo de cuenta monetaria
           let nuevoSaldo = Number(this.cuentaEmisora.saldo) - Number(this.transferencia.cantidad);
           console.log(nuevoSaldo);
-          this.db.modifyMonetary(this.cuentaEmisora.usuario,'saldo',nuevoSaldo.toString());
+          await this.db.modifyMonetary(this.cuentaEmisora.usuario,'saldo',nuevoSaldo.toString());
         }
         if (this.cuentaEmisora.tipo === 'ahorro') {
           //Modificar saldo de cuenta ahorro
           let nuevoSaldo = Number(this.cuentaEmisora.saldo) - Number(this.transferencia.cantidad);
-          this.db.modifyAccount(this.cuentaEmisora.numeroCuenta,'saldo', nuevoSaldo.toString());
+          await this.db.modifyAccount(this.cuentaEmisora.numeroCuenta,'saldo', nuevoSaldo.toString());
         }
         this.alert = true;
         this.error = false;
@@ -192,15 +225,5 @@ export class TransferenciaComponent implements OnInit {
         return;
       }
     });
-  }
-
-  async presentToast(toastMessage: string, toastColor: string) {
-    const toast = await this.toastController.create({
-      message: toastMessage,
-      cssClass: 'center',
-      duration: 1000,
-      color: toastColor,
-    });
-    toast.present();
   }
 }

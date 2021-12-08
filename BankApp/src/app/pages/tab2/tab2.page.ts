@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component } from '@angular/core';
 import { DynamoDBService } from '../../services/dynamo-db.service';
-import { Cuenta, User } from '../../interfaces/interfaces';
+import { Cuenta, User, Favorito } from '../../interfaces/interfaces';
 import { Router } from '@angular/router';
 import {
   AlertController,
@@ -26,6 +26,8 @@ export class Tab2Page {
   };
   cuentas: Cuenta[] = [];
   cuentasAhorro: Cuenta[] = [];
+  favoritas: Favorito[] = [];
+  cuenta: Cuenta;
   constructor(
     private db: DynamoDBService,
     private storage: DataLocalService,
@@ -40,12 +42,7 @@ export class Tab2Page {
 
   doRefresh(event) {
     setTimeout(async () => {
-      await this.db.getMonetaryAcounts().then((resp) => {
-        this.cuentas = resp.data['monetarias'];
-      });
-      await this.db.getAcounts().then((resp) => {
-        this.cuentasAhorro = resp.data['cuentas'];
-      });
+      this.init();
       event.target.complete();
     }, 1500);
   }
@@ -79,17 +76,37 @@ export class Tab2Page {
     }
   }
   async init() {
+    this.cuentasAhorro = [];
+    this.cuentas = [];
     this.currentUser = await this.storage.getCurrentUser();
     console.log(this.currentUser);
     if (this.currentUser.isAdmin) {
-      this.db.getMonetaryAcounts().then((resp) => {
+      await this.db.getMonetaryAcounts().then((resp) => {
         this.cuentas = resp.data['monetarias'];
       });
-      this.db.getAcounts().then((resp) => {
+      await this.db.getAcounts().then((resp) => {
         this.cuentasAhorro = resp.data['cuentas'];
       });
+      //Traer favoritas del usuario
+      console.log(this.currentUser.usuario);
     } else if (this.currentUser.usuario !== undefined) {
-      //metodo para llamar las favoritas de los usuarios
+      await this.db.getUserFavorites(this.currentUser.usuario).then((resp) => {
+        this.favoritas = resp.data['cuentas'];
+      });
+      for (let fav of this.favoritas) {
+        if (fav.tipo === 'monetaria') {
+          await this.db.getMonetary(fav.usuarioCuenta).then((resp) => {
+            this.cuenta = resp.data;
+          });
+          this.cuentas.push(this.cuenta);
+        }
+        if (fav.tipo === 'ahorro') {
+          await this.db.getAccount(fav.numeroCuenta).then((resp) => {
+            this.cuenta = resp.data;
+          });
+          this.cuentasAhorro.push(this.cuenta);
+        }
+      }
     }
     this.bubbles = false;
   }

@@ -12,6 +12,8 @@
 </ion-header>
 <ion-content>
     <div *ngIf="!agregar" class="div-center">
+        <h1 class="center">Transferir</h1>
+        <img src="../../../assets/images/transferir.svg" width="300px" />
         <form (ngSubmit)="onSubmit()">
             <ion-item-group>
                 <app-alert *ngIf="alert" [message]="message" [error]="error"></app-alert>
@@ -75,6 +77,7 @@
     <div *ngIf="agregar" class="div-center">
         <form (ngSubmit)="onSubmitNewFav()">
             <ion-item-group>
+                <app-alert *ngIf="alert" [message]="message" [error]="error"></app-alert>
                 <ion-item>
                     <ion-label position="floating">Numero de cuenta</ion-label>
                     <ion-input (ionChange)="getuser($event,'destinatario')" [value]="numeroCuentaDest" name="cuenta" pattern="^[a-zA-Z0-9\-\.]+$" type="text" required>
@@ -93,7 +96,7 @@
                 <ion-button color="danger" (click)="cancelar()">
                     Cancelar
                 </ion-button>
-                <ion-button (click)="agregarfav()" color="primary" type="submit">
+                <ion-button color="primary" type="submit">
                     Agregar
                 </ion-button>
             </ion-buttons>

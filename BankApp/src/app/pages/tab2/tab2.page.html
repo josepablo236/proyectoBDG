@@ -34,11 +34,11 @@
         </ion-row>
     </ion-grid>
     <h3 *ngIf="cuentas.length !== 0">Cuentas Monetarias</h3>
-    <app-cuenta *ngIf="textoBuscar === '' && !bubbles" [cuentas]="cuentas" [isAdmin]="currentUser.isAdmin" [monetary]="true">
+    <app-cuenta *ngIf="textoBuscar === '' && !bubbles" [cuentas]="cuentas" [isAdmin]="currentUser.isAdmin" [monetary]="true" [usuario]="currentUser.usuario">
     </app-cuenta>
 
     <h3 *ngIf="cuentasAhorro.length !== 0">Cuenta/s de Ahorro</h3>
-    <app-cuenta *ngIf="textoBuscar === '' && !bubbles" [cuentas]="cuentasAhorro" [isAdmin]="currentUser.isAdmin" [monetary]="false">
+    <app-cuenta *ngIf="textoBuscar === '' && !bubbles" [cuentas]="cuentasAhorro" [isAdmin]="currentUser.isAdmin" [monetary]="false" [usuario]="currentUser.usuario">
     </app-cuenta>
 
 </ion-content>

@@ -200,6 +200,12 @@ export class DynamoDBService {
     return this.getQuery<Transferencia[]>(query);
   }
 
+  //Función para traer transferencias por cuenta
+  async getAccountTrans(cuenta: string) {
+    const query = `/ctransferencias?numeroCuenta=${cuenta}`;
+    return this.getQuery<Transferencia[]>(query);
+  }
+
   //Función para traer transferencia con id
   async getTrans(id: string) {
     const query = `/transferencia?id=${id}`;
@@ -213,7 +219,7 @@ export class DynamoDBService {
     return true;
   }
 
-  //Función para traer cuentas ahorros por usuario
+  //Función para traer favoritos por usuario
   async getUserFavorites(usuario: string) {
     const query = `/user-favorites?usuario=${usuario}`;
     return this.getQuery<Cuenta[]>(query);

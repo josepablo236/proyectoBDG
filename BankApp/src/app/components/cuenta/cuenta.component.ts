@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit, Input } from '@angular/core';
 import { DynamoDBService } from '../../services/dynamo-db.service';
-import { Cuenta, Transferencia } from '../../interfaces/interfaces';
+import { Cuenta, Transferencia, Favorito } from '../../interfaces/interfaces';
 import { v4 as uuidv4 } from 'uuid';
 import {
   AlertController,
@@ -9,8 +9,9 @@ import {
   ToastController,
 } from '@ionic/angular';
 import { HistorialTransaccionesComponent } from '../historial-transacciones/historial-transacciones.component';
-import { TransferenciaComponent } from '../transferencia/transferencia.component';
 import { DataLocalService } from '../../services/data-local.service';
+import { AcreditarComponent } from '../acreditar/acreditar.component';
+import { TransferenciaComponent } from '../transferencia/transferencia.component';
 @Component({
   selector: 'app-cuenta',
   templateUrl: './cuenta.component.html',
@@ -20,6 +21,8 @@ export class CuentaComponent implements OnInit {
   @Input() cuentas: Cuenta[];
   @Input() isAdmin: boolean;
   @Input() monetary: boolean;
+  @Input() usuario: string;
+  cuentasFav: Favorito[] = [];
   transferencias: Transferencia[] = [];
   constructor(
     private db: DynamoDBService,
@@ -29,14 +32,16 @@ export class CuentaComponent implements OnInit {
     private modalControlller: ModalController
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.cuentas);
+  }
   createSavingAccount(_cuenta: Cuenta) {
     const cuenta: Cuenta = {
       usuario: _cuenta.usuario,
       numeroCuenta: uuidv4(),
       saldo: 0,
       estado: 'activa',
-      tipo: 'ahorro'
+      tipo: 'ahorro',
     };
 
     this.presentAlertConfirm(
@@ -60,29 +65,41 @@ export class CuentaComponent implements OnInit {
     this.presentAlertConfirm(header, mensaje, 'blockAccount', cuenta);
   }
 
+  async acreditar(cuenta: Cuenta) {
+    this.mostrarModalAcreditar(cuenta);
+  }
+  async mostrarModalAcreditar(cuenta: Cuenta) {
+    const modal = await this.modalControlller.create({
+      component: AcreditarComponent,
+      componentProps: {
+        cuenta,
+      },
+    });
+    await modal.present();
+    modal.onWillDismiss();
+  }
+
   async transferir(cuenta: Cuenta) {
     let cuentasPersonales;
-    let cuentasFav = [];
     if (!this.isAdmin) {
-      cuentasPersonales = await this.getAccounts(cuenta.usuario);
-      cuentasFav = [];
-    } else {
-      const currentUser = await this.storage.getCurrentUser();
-      cuentasPersonales = await this.getAccounts(currentUser);
-      cuentasFav = [];
+      cuentasPersonales = await this.getAccounts(this.usuario);
     }
     //getFavAccoutns
+    await this.db.getUserFavorites(this.usuario).then((resp) => {
+      this.cuentasFav = resp.data['cuentas'];
+    });
+
     this.mostrarModalCreateTrans(
-      cuenta.usuario,
+      this.usuario,
       cuentasPersonales,
-      cuentasFav,
+      this.cuentasFav,
       cuenta.numeroCuenta
     );
   }
   async mostrarModalCreateTrans(
     user: string,
     cuentasUsuario: Cuenta[],
-    cuentasFav: Cuenta[],
+    cuentasFav: Favorito[],
     numeroCuentaDest: string
   ) {
     const modal = await this.modalControlller.create({
@@ -97,6 +114,7 @@ export class CuentaComponent implements OnInit {
     await modal.present();
     modal.onWillDismiss();
   }
+
   async getAccounts(usuario: string) {
     const cuentas: Cuenta[] = [];
     await this.db.getMonetary(usuario).then((resp) => {

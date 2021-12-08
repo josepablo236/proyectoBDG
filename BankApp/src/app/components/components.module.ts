@@ -7,6 +7,7 @@ import { AlertComponent } from './alert/alert.component';
 import { UploadImgComponent } from './upload-img/upload-img.component';
 import { CuentaComponent } from './cuenta/cuenta.component';
 import { FormsModule } from '@angular/forms';
+import { AcreditarComponent } from './acreditar/acreditar.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { FormsModule } from '@angular/forms';
     UploadImgComponent,
     CuentaComponent,
     TransferenciaComponent,
+    AcreditarComponent
   ],
   exports: [
     HistorialTransaccionesComponent,
@@ -24,6 +26,7 @@ import { FormsModule } from '@angular/forms';
     UploadImgComponent,
     CuentaComponent,
     TransferenciaComponent,
+    AcreditarComponent
   ],
   imports: [CommonModule, IonicModule, FormsModule],
 })

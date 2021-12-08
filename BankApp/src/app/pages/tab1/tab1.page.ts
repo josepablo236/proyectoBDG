@@ -55,6 +55,7 @@ export class Tab1Page {
   }
 
   transferir(numeroCuenta: string) {
+    console.log("NUMERO CUENTA", numeroCuenta);
     this.getAccounts();
     //getFavAccoutns
     this.mostrarModalCreateTrans(
@@ -113,6 +114,10 @@ export class Tab1Page {
 
     await this.db.getUserAccounts(this.user.usuario).then((resp) => {
       this.cuentas = resp.data['cuentas'];
+    });
+    //getFavAccoutns
+    this.db.getUserFavorites(this.user.usuario).then((resp) => {
+      this.cuentasFavoritas = resp.data['cuentas'];
     });
   }
   async getcurrentUser() {

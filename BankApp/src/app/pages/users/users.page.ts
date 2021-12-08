@@ -174,17 +174,6 @@ export class UsersPage implements OnInit {
     await this.getUsers();
     modal.onWillDismiss();
   }
-  //Modal para ver la informacion del usuario
-  async mostrarModalUsuario(user: User) {
-    const modal = await this.modalCtrl.create({
-      component: UserInfoPage,
-      componentProps: {
-        user,
-      },
-    });
-    await modal.present();
-    modal.onWillDismiss();
-  }
 
   async presentToast(toastMessage: string, toastColor: string) {
     const toast = await this.toastController.create({

@@ -21,6 +21,7 @@ export interface Cuenta {
 export interface Favorito {
   numeroCuenta: string;
   usuario: string;
+  usuarioCuenta: string;
   estado: string;
   tipo: string;
 }
