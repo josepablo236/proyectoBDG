@@ -20,6 +20,7 @@ import { DataLocalService } from '../../services/data-local.service';
 export class Tab2Page {
   bubbles = false; //variable para mostrar el spinnig bubbles
   textoBuscar = '';
+  columnaBuscar = '';
   currentUser = {
     usuario: undefined,
     isAdmin: false,
@@ -28,6 +29,8 @@ export class Tab2Page {
   cuentasAhorro: Cuenta[] = [];
   favoritas: Favorito[] = [];
   cuenta: Cuenta;
+  cuentasUsuario: Cuenta[] = [];
+  campos = ['Numero Cuenta', 'usuario', 'saldo', 'estado'];
   constructor(
     private db: DynamoDBService,
     private storage: DataLocalService,
@@ -37,7 +40,6 @@ export class Tab2Page {
     private modalController: ModalController
   ) {
     this.bubbles = true;
-    this.init();
   }
 
   doRefresh(event) {
@@ -46,24 +48,55 @@ export class Tab2Page {
       event.target.complete();
     }, 1500);
   }
-  getFavorites() {}
 
+  getColumnText(event) {
+    switch (event.detail.value) {
+      case 'cta. destinatario':
+        this.columnaBuscar = 'cuentaDest';
+        break;
+      case 'cta. remitente':
+        this.columnaBuscar = 'cuentaRemi';
+        break;
+      case 'numero transferencia':
+        this.columnaBuscar = 'id';
+        break;
+
+      default:
+        this.columnaBuscar = event.detail.value;
+        break;
+    }
+  }
   onSearchChange(event) {
     this.bubbles = true;
     this.textoBuscar = event.detail.value;
-    if (true) {
-      setTimeout(() => {}, 1000);
-    } else {
-      setTimeout(() => {
-        this.bubbles = false;
-      }, 500);
-    }
     if (this.textoBuscar === '') {
       this.bubbles = false;
+    } else if (this.columnaBuscar === '') {
+      this.presentToast('Selecciona un campo', 'danger');
     }
+    this.bubbles = false;
   }
-  createTransfer() {
-    this.createTransfer();
+  async createTransfer() {
+    await this.getpersonalAccounts();
+    this.mostrarModalCreateTrans(
+      this.currentUser.usuario,
+      this.cuentasUsuario,
+      this.cuentas
+    );
+  }
+
+  async getpersonalAccounts() {
+    this.cuentasUsuario = [];
+    console.log(this.currentUser);
+
+    await this.db.getUserAccounts(this.currentUser.usuario).then((resp) => {
+      this.cuentasUsuario = resp.data['cuentas'];
+    });
+
+    await this.db.getMonetary(this.currentUser.usuario).then((resp) => {
+      this.cuentasUsuario.push(resp.data);
+    });
+    console.log(this.cuentasUsuario);
   }
 
   async ionViewWillEnter() {
@@ -75,11 +108,16 @@ export class Tab2Page {
       this.init();
     }
   }
-  async init() {
+  restart() {
     this.cuentasAhorro = [];
     this.cuentas = [];
+    this.favoritas = [];
+    this.textoBuscar = '';
+    this.columnaBuscar = '';
+  }
+  async init() {
+    this.restart();
     this.currentUser = await this.storage.getCurrentUser();
-    console.log(this.currentUser);
     if (this.currentUser.isAdmin) {
       await this.db.getMonetaryAcounts().then((resp) => {
         this.cuentas = resp.data['monetarias'];
@@ -87,20 +125,19 @@ export class Tab2Page {
       await this.db.getAcounts().then((resp) => {
         this.cuentasAhorro = resp.data['cuentas'];
       });
-      //Traer favoritas del usuario
-      console.log(this.currentUser.usuario);
     } else if (this.currentUser.usuario !== undefined) {
       await this.db.getUserFavorites(this.currentUser.usuario).then((resp) => {
         this.favoritas = resp.data['cuentas'];
       });
-      for (let fav of this.favoritas) {
+      console.log(this.favoritas);
+
+      for (const fav of this.favoritas) {
         if (fav.tipo === 'monetaria') {
           await this.db.getMonetary(fav.usuarioCuenta).then((resp) => {
             this.cuenta = resp.data;
           });
           this.cuentas.push(this.cuenta);
-        }
-        if (fav.tipo === 'ahorro') {
+        } else if (fav.tipo === 'ahorro') {
           await this.db.getAccount(fav.numeroCuenta).then((resp) => {
             this.cuenta = resp.data;
           });
@@ -111,10 +148,18 @@ export class Tab2Page {
     this.bubbles = false;
   }
   //Modal de crear transferencia
-  async mostrarModalCreate() {
+  async mostrarModalCreateTrans(
+    user: string,
+    cuentasUsuario: Cuenta[],
+    cuentasFav: Cuenta[]
+  ) {
     const modal = await this.modalController.create({
       component: TransferenciaComponent,
-      componentProps: {},
+      componentProps: {
+        user,
+        cuentasUsuario,
+        cuentasFav,
+      },
     });
     await modal.present();
     modal.onWillDismiss();

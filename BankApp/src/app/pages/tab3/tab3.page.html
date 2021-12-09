@@ -8,8 +8,16 @@
 <ion-toolbar>
     <ion-searchbar placeholder="Buscar transferencia" inputmode="decimal" type="decimal" (ionChange)="onSearchChange($event)" [debounce]="700" [value]="textoBuscar"></ion-searchbar>
     <ion-buttons slot="end">
+
         <ion-button>
-            <ion-icon name="apps-outline"></ion-icon>
+            <ion-icon name="filter-outline">
+
+            </ion-icon>
+            <ion-select (ionChange)="getColumnText($event)" interface="popover" name="cuenta">
+                <ion-list *ngFor="let campo of campos">
+                    <ion-select-option [value]="campo">{{campo}}</ion-select-option>
+                </ion-list>
+            </ion-select>
         </ion-button>
     </ion-buttons>
 
@@ -22,6 +30,7 @@
             </ion-col>
         </ion-row>
     </ion-grid>
-    <app-historial-transacciones *ngIf="!bubbles" [transferencias]="transferencias"></app-historial-transacciones>
+    <app-historial-transacciones *ngIf="!bubbles" [transferencias]="transferencias | filtro:textoBuscar:columnaBuscar" [isAdmin]="currentUser.isAdmin" numeroCuenta="" [menu]="false">
+    </app-historial-transacciones>
 
 </ion-content>

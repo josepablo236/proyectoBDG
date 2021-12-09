@@ -12,7 +12,7 @@
 </ion-header>
 <ion-content>
 
-    <div *ngIf="transferencias!== undefined">
+    <div *ngIf="transferencias!== undefined && currentUser.usuario !== undefined">
         <ion-list lines="none" *ngFor="let transferencia of transferencias">
             <ion-card>
                 <ion-card-header>
@@ -20,12 +20,17 @@
                     <ion-card-title>{{transferencia.id}}</ion-card-title>
                 </ion-card-header>
                 <ion-card-content>
-                    <p *ngIf="true">Credito</p>
+                    <p *ngIf="transferencia.destinatario === currentUser.usuario && numeroCuenta === transferencia.cuentaDest ">
+                        Credito</p>
+                    <p *ngIf="transferencia.destinatario !== currentUser.usuario ||numeroCuenta !== transferencia.cuentaDest ">
+                        Debito</p>
                     <p>{{transferencia.descripcion}}</p>
                     <ion-item>
+                        <ion-label>Remitente: {{transferencia.remitente}} </ion-label>
                         <ion-label>Destinatario: {{transferencia.destinatario}} </ion-label>
                         <span slot="end">Q {{transferencia.cantidad}}</span>
                     </ion-item>
+
                 </ion-card-content>
             </ion-card>
         </ion-list>

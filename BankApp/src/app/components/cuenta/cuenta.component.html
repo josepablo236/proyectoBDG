@@ -6,25 +6,25 @@
         </ion-card-header>
         <ion-card-content>
             <p capitalize>{{cuenta.estado}}</p>
-            <ion-item-group *ngIf="isAdmin" class="flex">
+            <ion-item-group *ngIf="currentUser.isAdmin" class="flex">
                 <ion-label> Q {{cuenta.saldo}}</ion-label>
             </ion-item-group>
 
             <ion-buttons>
-                <ion-button *ngIf="!isAdmin" (click)="transferir(cuenta)">
+                <ion-button *ngIf="!currentUser.isAdmin" (click)="transferir(cuenta)">
                     <ion-icon slot="start" name="receipt-outline"></ion-icon>
                 </ion-button>
-                <ion-button *ngIf="isAdmin" (click)="acreditar(cuenta)">
+                <ion-button *ngIf="currentUser.isAdmin" (click)="acreditar(cuenta)">
                     <ion-icon slot="start" name="receipt-outline"></ion-icon>
                 </ion-button>
                 <ion-button (click)="historial(cuenta)">
                     <ion-icon slot="start" name="compass-outline"></ion-icon>
                 </ion-button>
-                <ion-button slot="start" *ngIf="isAdmin && monetary" (click)="createSavingAccount(cuenta)">
+                <ion-button slot="start" *ngIf="currentUser.isAdmin && monetary" (click)="createSavingAccount(cuenta)">
                     <ion-icon slot="start" name="add"></ion-icon>
 
                 </ion-button>
-                <ion-button slot="end" *ngIf="isAdmin" (click)="blockAccount(cuenta)">
+                <ion-button slot="end" *ngIf="currentUser.isAdmin" (click)="blockAccount(cuenta)">
                     <ion-icon slot="start" name="ban-outline"></ion-icon>
                 </ion-button>
             </ion-buttons>

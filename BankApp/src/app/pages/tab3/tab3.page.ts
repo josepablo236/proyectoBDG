@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component } from '@angular/core';
-import { Transferencia, User } from '../../interfaces/interfaces';
+import { Transferencia, User, Cuenta } from '../../interfaces/interfaces';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { DynamoDBService } from '../../services/dynamo-db.service';
@@ -17,8 +17,19 @@ export class Tab3Page {
     usuario: undefined,
     isAdmin: false,
   };
+  numeroCuenta = '';
+  campos = [
+    'destinatario',
+    'cta. destinatario',
+    'remitente',
+    'cta. remitente',
+    'fecha',
+    'numero transferencia',
+    'cantidad',
+  ];
   bubbles = true;
   textoBuscar = '';
+  columnaBuscar = '';
   constructor(
     private db: DynamoDBService,
     private storage: DataLocalService,
@@ -41,23 +52,32 @@ export class Tab3Page {
     }
     this.bubbles = false;
   }
+  getColumnText(event) {
+    switch (event.detail.value) {
+      case 'cta. destinatario':
+        this.columnaBuscar = 'cuentaDest';
+        break;
+      case 'cta. remitente':
+        this.columnaBuscar = 'cuentaRemi';
+        break;
+      case 'numero transferencia':
+        this.columnaBuscar = 'id';
+        break;
 
+      default:
+        this.columnaBuscar = event.detail.value;
+        break;
+    }
+  }
   onSearchChange(event) {
     this.bubbles = true;
     this.textoBuscar = event.detail.value;
-    if (true) {
-      setTimeout(() => {
-        //this.transferencias = db.transfilter
-      }, 1000);
-    } else {
-      setTimeout(() => {
-        this.bubbles = false;
-        //this.transferencias = db.transfavoritas
-      }, 500);
-    }
     if (this.textoBuscar === '') {
       this.bubbles = false;
+    } else if (this.columnaBuscar === '') {
+      this.presentToast('Selecciona un campo', 'danger');
     }
+    this.bubbles = false;
   }
   async ionViewWillEnter() {
     this.currentUser = await this.storage.getCurrentUser();

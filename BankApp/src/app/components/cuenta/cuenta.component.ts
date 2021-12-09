@@ -19,7 +19,7 @@ import { TransferenciaComponent } from '../transferencia/transferencia.component
 })
 export class CuentaComponent implements OnInit {
   @Input() cuentas: Cuenta[];
-  @Input() isAdmin: boolean;
+  @Input() currentUser: any;
   @Input() monetary: boolean;
   @Input() usuario: string;
   cuentasFav: Favorito[] = [];
@@ -29,16 +29,14 @@ export class CuentaComponent implements OnInit {
     private storage: DataLocalService,
     private toastController: ToastController,
     private alertController: AlertController,
-    private modalControlller: ModalController
+    private modalController: ModalController
   ) {}
 
-  ngOnInit() {
-    console.log(this.cuentas);
-  }
+  ngOnInit() {}
   createSavingAccount(_cuenta: Cuenta) {
     const cuenta: Cuenta = {
       usuario: _cuenta.usuario,
-      numeroCuenta: uuidv4(),
+      numeroCuenta: uuidv4().substring(0, 8),
       saldo: 0,
       estado: 'activa',
       tipo: 'ahorro',
@@ -69,7 +67,7 @@ export class CuentaComponent implements OnInit {
     this.mostrarModalAcreditar(cuenta);
   }
   async mostrarModalAcreditar(cuenta: Cuenta) {
-    const modal = await this.modalControlller.create({
+    const modal = await this.modalController.create({
       component: AcreditarComponent,
       componentProps: {
         cuenta,
@@ -81,7 +79,7 @@ export class CuentaComponent implements OnInit {
 
   async transferir(cuenta: Cuenta) {
     let cuentasPersonales;
-    if (!this.isAdmin) {
+    if (!this.currentUser.isAdmin) {
       cuentasPersonales = await this.getAccounts(this.usuario);
     }
     //getFavAccoutns
@@ -102,7 +100,7 @@ export class CuentaComponent implements OnInit {
     cuentasFav: Favorito[],
     numeroCuentaDest: string
   ) {
-    const modal = await this.modalControlller.create({
+    const modal = await this.modalController.create({
       component: TransferenciaComponent,
       componentProps: {
         user,
@@ -120,30 +118,34 @@ export class CuentaComponent implements OnInit {
     await this.db.getMonetary(usuario).then((resp) => {
       cuentas.push(resp.data);
     });
-    console.log(cuentas);
 
     await this.db.getUserAccounts(usuario).then((resp) => {
       cuentas.push(...resp.data['cuentas']);
     });
-    console.log(cuentas);
+
     return cuentas;
   }
-  historial(cuenta: Cuenta) {
-    this.db.getTrans(cuenta.numeroCuenta).then((resp) => {
+  async historial(cuenta: Cuenta) {
+    await this.db.getUserTrans(this.currentUser.usuario).then((resp) => {
       this.transferencias = resp.data['trans'];
+      console.log(resp.data);
     });
+    console.log(this.transferencias);
 
-    this.mostrarModalTransaccion(this.transferencias, false, true);
+    this.mostrarModalTransaccion(this.transferencias, '', false, true);
   }
+
   async mostrarModalTransaccion(
-    transacciones: Transferencia[],
+    transferencias: Transferencia[],
+    cuenta: string,
     isAdmin: boolean,
     menu: boolean
   ) {
-    const modal = await this.modalControlller.create({
+    const modal = await this.modalController.create({
       component: HistorialTransaccionesComponent,
       componentProps: {
-        transacciones,
+        transferencias,
+        cuenta,
         isAdmin,
         menu,
       },

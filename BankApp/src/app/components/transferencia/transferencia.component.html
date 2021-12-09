@@ -21,7 +21,8 @@
                     <ion-label>Cuenta a debitar</ion-label>
                     <ion-select (ionChange)="getuser($event,'remitente')" interface="popover" name="rol" placeholder="Select One" required>
                         <ion-list *ngFor="let cuenta of cuentasUsuario">
-                            <ion-select-option [value]="cuenta.numeroCuenta">{{cuenta.numeroCuenta.substring(0,8)}}</ion-select-option>
+                            <ion-select-option [value]="cuenta.numeroCuenta">{{cuenta.numeroCuenta}}
+                            </ion-select-option>
                         </ion-list>
                     </ion-select>
                 </ion-item>
@@ -29,7 +30,7 @@
 
                 <ion-item *ngIf="numeroCuentaDest !== '' && !editCuentaDest">
                     <ion-label>Cuenta a creditar</ion-label>
-                    <ion-input (ionChange)="getuser($event,'destinatario')" [value]="numeroCuentaDest" name="cuenta" pattern="^[a-zA-Z0-9\-\.]+$" type="text" required>
+                    <ion-input (ionChange)="getuser($event,'destinatario')" [value]="transferencia.cuentaDest" name="cuenta" pattern="^[a-zA-Z0-9\-\.]+$" type="text" required>
                     </ion-input>
                     <ion-button slot="end" (click)="editCuentaDest = true">
                         <ion-icon slot="icon-only" name="pencil-outline"></ion-icon>
@@ -38,15 +39,15 @@
 
                 <ion-item *ngIf="numeroCuentaDest === '' || editCuentaDest">
                     <ion-label>Cuenta a acreditar</ion-label>
-                    <ion-select interface="popover" name="rol" placeholder="Select One" required>
-                        <ion-list (ionChange)="getuser($event, 'destinatario')" *ngFor="let cuenta of cuentasFav">
+                    <ion-select (ionChange)="getuser($event,'destinatario')" interface="popover" name="cuenta" placeholder="Select One" required>
+                        <ion-list *ngFor="let cuenta of cuentasFav">
                             <ion-select-option [value]="cuenta.numeroCuenta">{{cuenta.numeroCuenta}}</ion-select-option>
                         </ion-list>
                     </ion-select>
-                    <ion-button (click)="editCuentaDest = false" expand="block" fill="clear" shape="round">
-
-                        <ion-icon name="pencil-outline"></ion-icon>
+                    <ion-button slot="end" (click)="editCuentaDest = false">
+                        <ion-icon slot="icon-only" name="pencil-outline"></ion-icon>
                     </ion-button>
+
                 </ion-item>
                 <ion-item>
                     <ion-label>Usuario</ion-label>
@@ -80,8 +81,11 @@
                 <app-alert *ngIf="alert" [message]="message" [error]="error"></app-alert>
                 <ion-item>
                     <ion-label position="floating">Numero de cuenta</ion-label>
-                    <ion-input (ionChange)="getuser($event,'destinatario')" [value]="numeroCuentaDest" name="cuenta" pattern="^[a-zA-Z0-9\-\.]+$" type="text" required>
+                    <ion-input (ionChange)="getuser($event,'destinatario')" [value]="transferencia.cuentaDest" name="cuenta" pattern="^[a-zA-Z0-9\-\.]+$" type="text" required>
                     </ion-input>
+                    <ion-button fill="clear" slot="end" (click)="transferencia.cuentaDest = ''">
+                        <ion-icon color="danger" name="close-outline"></ion-icon>
+                    </ion-button>
                 </ion-item>
                 <ion-item>
                     <ion-label>Usuario</ion-label>
@@ -100,10 +104,6 @@
                     Agregar
                 </ion-button>
             </ion-buttons>
-
-
-
-
         </form>
     </div>
 </ion-content>

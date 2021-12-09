@@ -202,14 +202,14 @@ export class DynamoDBService {
 
   //Función para traer transferencias por cuenta
   async getAccountTrans(cuenta: string) {
-    const query = `/ctransferencias?numeroCuenta=${cuenta}`;
+    const query = `/ctransferencias?cuenta=${cuenta}`;
     return this.getQuery<Transferencia[]>(query);
   }
 
   //Función para traer transferencia con id
   async getTrans(id: string) {
     const query = `/transferencia?id=${id}`;
-    return this.getQuery<Transferencia>(query);
+    return this.getQuery<Transferencia[]>(query);
   }
 
   //Funcion para crear cuenta ahorros

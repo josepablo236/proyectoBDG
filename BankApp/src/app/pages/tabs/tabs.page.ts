@@ -23,7 +23,6 @@ export class TabsPage {
   //metodo para mostrar las diferentes tabs, segun el tipo de usuario
   async init() {
     this.currentUser = await this.storage.getCurrentUser();
-    console.log(this.currentUser);
     this.isAdmin = this.currentUser.isAdmin;
   }
   async ionViewWillEnter() {

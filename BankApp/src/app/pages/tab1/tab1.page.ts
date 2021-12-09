@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/dot-notation */
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   AlertController,
   ModalController,
@@ -31,7 +31,6 @@ export class Tab1Page {
     tipo: '',
   };
   cuentas: Cuenta[] = [];
-  transferencias: Transferencia[] = [];
   cuentasUsuario: Cuenta[] = [];
   cuentasFavoritas: Cuenta[] = [];
   currentUser = {
@@ -49,13 +48,12 @@ export class Tab1Page {
     this.bubbles = true;
     this.init();
   }
-
   cerrarSesion() {
     this.presentAlertConfirm();
   }
 
   transferir(numeroCuenta: string) {
-    console.log("NUMERO CUENTA", numeroCuenta);
+    console.log('NUMERO CUENTA', numeroCuenta);
     this.getAccounts();
     //getFavAccoutns
     this.mostrarModalCreateTrans(
@@ -72,14 +70,21 @@ export class Tab1Page {
   }
 
   historial(cuenta: Cuenta) {
-    this.db.getTrans(cuenta.numeroCuenta).then((resp) => {
-      this.transferencias = resp.data['trans'];
+    this.db.getAccountTrans(cuenta.numeroCuenta).then((resp) => {
+      console.log(resp.data['trans']);
+
+      this.mostrarModalTransaccion(
+        resp.data['trans'],
+        cuenta.numeroCuenta,
+        false,
+        true
+      );
     });
-    this.mostrarModalTransaccion(this.transferencias, false, true);
   }
 
   async ionViewWillEnter() {
     this.currentUser = await this.storage.getCurrentUser();
+
     if (this.currentUser.usuario === undefined) {
       await this.presentToast('Sesion expirada', 'danger');
       this.router.navigate(['/']);
@@ -90,6 +95,7 @@ export class Tab1Page {
 
   async init() {
     await this.getcurrentUser();
+
     if (this.user !== undefined) {
       await this.getpersonalAccounts();
     }
@@ -142,14 +148,16 @@ export class Tab1Page {
   }
 
   async mostrarModalTransaccion(
-    transacciones: Transferencia[],
+    transferencias: Transferencia[],
+    cuenta: string,
     isAdmin: boolean,
     menu: boolean
   ) {
     const modal = await this.modalController.create({
       component: HistorialTransaccionesComponent,
       componentProps: {
-        transacciones,
+        transferencias,
+        cuenta,
         isAdmin,
         menu,
       },
