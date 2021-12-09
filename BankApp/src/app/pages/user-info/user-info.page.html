@@ -7,7 +7,7 @@
                 <ion-label>Regresar</ion-label>
             </ion-button>
 
-            <ion-button *ngIf="!edit" class="left" slot="end" color="primary" (click)="edit = true; alert = false">
+            <ion-button *ngIf="!edit" class="left" slot="end" color="warning" (click)="edit = true; alert = false">
                 <ion-icon slot="start" name="key-outline"></ion-icon>
                 <ion-label>Cambiar contraseña</ion-label>
             </ion-button>
@@ -16,11 +16,7 @@
 </ion-header>
 <ion-content class="ion-padding">
     <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-        <ion-refresher-content
-          pullingIcon="chevron-down-circle-outline"
-          pullingText="Actualizar"
-          refreshingSpinner="circles"
-          refreshingText="Actualizando...">
+        <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Actualizar" refreshingSpinner="circles" refreshingText="Actualizando...">
         </ion-refresher-content>
     </ion-refresher>
     <ion-grid class="div-center" fixed *ngIf="edit">
@@ -79,7 +75,8 @@
 
                         <ion-item>
                             <ion-label position="floating">Fecha de Nacimiento</ion-label>
-                            <ion-input type="text" name="nacimiento" disabled="true" [value]="user.nacimiento"></ion-input>
+                            <ion-input type="text" name="nacimiento" disabled="true" [value]="user.nacimiento">
+                            </ion-input>
                         </ion-item>
 
                         <ion-item>

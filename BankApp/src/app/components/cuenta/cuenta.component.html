@@ -5,6 +5,7 @@
             <ion-card-title>{{cuenta.numeroCuenta}}</ion-card-title>
         </ion-card-header>
         <ion-card-content>
+            <p capitalize>{{cuenta.tipo}}</p>
             <p capitalize>{{cuenta.estado}}</p>
             <ion-item-group *ngIf="currentUser.isAdmin" class="flex">
                 <ion-label> Q {{cuenta.saldo}}</ion-label>

@@ -41,7 +41,8 @@
             </ion-col>
         </ion-row>
     </ion-grid>
-    <h3 *ngIf="cuentas.length !== 0">Cuentas Monetarias</h3>
+    <h3 *ngIf="cuentas.length !== 0 && currentUser.isAdmin">Cuentas Monetarias</h3>
+    <h3 *ngIf="cuentas.length !== 0 && !currentUser.isAdmin">Cuentas Favoritas</h3>
     <app-cuenta *ngIf="!bubbles" [cuentas]="cuentas| filtro:textoBuscar:columnaBuscar" [currentUser]="currentUser" [monetary]="true" [usuario]="currentUser.usuario">
     </app-cuenta>
 

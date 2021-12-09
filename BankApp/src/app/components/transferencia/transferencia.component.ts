@@ -80,6 +80,12 @@ export class TransferenciaComponent implements OnInit {
       this.message = 'La cuenta destino está bloqueada';
       return;
     }
+    if (this.cuentaEmisora.estado === 'inactiva') {
+      this.alert = true;
+      this.error = true;
+      this.message = 'La cuenta emisora está bloqueada';
+      return;
+    }
     //Validar que si es la misma
     if (this.cuentaEmisora.numeroCuenta === this.transferencia.cuentaDest) {
       this.alert = true;
@@ -107,6 +113,7 @@ export class TransferenciaComponent implements OnInit {
     }
   }
   async onSubmitNewFav() {
+    this.agregar = false;
     this.alert = false;
     this.error = false;
     if (this.cuenta.usuario === undefined) {
@@ -121,6 +128,7 @@ export class TransferenciaComponent implements OnInit {
       estado: this.cuenta.estado,
       tipo: this.cuenta.tipo,
     };
+    console.log(fav);
     this.db.createFavorite(fav).then((response) => {
       if (response) {
         this.alert = true;

@@ -20,10 +20,6 @@
                     <ion-card-title>{{transferencia.id}}</ion-card-title>
                 </ion-card-header>
                 <ion-card-content>
-                    <p *ngIf="transferencia.destinatario === currentUser.usuario && numeroCuenta === transferencia.cuentaDest ">
-                        Credito</p>
-                    <p *ngIf="transferencia.destinatario !== currentUser.usuario ||numeroCuenta !== transferencia.cuentaDest ">
-                        Debito</p>
                     <p>{{transferencia.descripcion}}</p>
                     <p>Remitente: {{transferencia.remitente}} {{transferencia.cuentaRemi}} </p>
                     <p>Destinatario: {{transferencia.destinatario}} {{transferencia.cuentaDest}}</p>
