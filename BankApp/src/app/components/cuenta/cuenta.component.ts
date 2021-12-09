@@ -126,12 +126,23 @@ export class CuentaComponent implements OnInit {
     return cuentas;
   }
   async historial(cuenta: Cuenta) {
-    await this.db.getUserTrans(this.currentUser.usuario).then((resp) => {
-      this.transferencias = resp.data['trans'];
-      console.log(resp.data);
-    });
-    console.log(this.transferencias);
-
+    if (!this.currentUser.isAdmin){
+       await this.db.getUserTrans(this.currentUser.usuario).then((resp) => {
+         this.transferencias = resp.data['trans'];
+         this.transferencias = this.transferencias.filter(
+           (x) => x.destinatario === cuenta.usuario
+         );
+         console.log(resp.data);
+       });
+       console.log(this.transferencias);
+    }
+    else{
+      await this.db.getAccountTrans(cuenta.numeroCuenta).then((resp) => {
+        this.transferencias = resp.data['trans'];
+        console.log(resp.data);
+      });
+      console.log(this.transferencias);
+    }
     this.mostrarModalTransaccion(this.transferencias, '', false, true);
   }
 

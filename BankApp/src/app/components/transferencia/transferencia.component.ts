@@ -101,7 +101,9 @@ export class TransferenciaComponent implements OnInit {
     }
     if (!this.error) {
       this.transferir();
-      this.regresar();
+      setTimeout(() => {
+        this.regresar();
+      }, 2000);
     }
   }
   async onSubmitNewFav() {

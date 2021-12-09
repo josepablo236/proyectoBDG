@@ -3,12 +3,6 @@
         <ion-title capitalize>
             Cuentas
         </ion-title>
-
-        <ion-buttons slot="end">
-            <ion-button (click)="createTransfer()">
-                <ion-icon slot="icon-only" name="add"></ion-icon>
-            </ion-button>
-        </ion-buttons>
     </ion-toolbar>
 </ion-header>
 <ion-toolbar *ngIf="currentUser.isAdmin">
@@ -32,6 +26,12 @@
         <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Actualizar" refreshingSpinner="circles" refreshingText="Actualizando...">
         </ion-refresher-content>
     </ion-refresher>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button (click)="createTransfer()">
+        <ion-icon name="receipt-outline"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
 
     <ion-grid *ngIf="bubbles " fixed>
         <ion-row>
