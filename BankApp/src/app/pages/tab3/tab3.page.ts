@@ -39,7 +39,12 @@ export class Tab3Page {
     this.bubbles = true;
     this.init();
   }
+  restart() {
+    this.textoBuscar = '';
+    this.columnaBuscar = '';
+  }
   async init() {
+    this.restart();
     this.currentUser = await this.storage.getCurrentUser();
     if (this.currentUser.isAdmin) {
       this.db.getTransfers().then((resp) => {

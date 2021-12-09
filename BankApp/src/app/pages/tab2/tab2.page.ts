@@ -30,7 +30,7 @@ export class Tab2Page {
   favoritas: Favorito[] = [];
   cuenta: Cuenta;
   cuentasUsuario: Cuenta[] = [];
-  campos = ['Numero Cuenta', 'usuario', 'saldo', 'estado'];
+  campos = ['numero cuenta', 'usuario', 'saldo', 'estado', 'tipo'];
   constructor(
     private db: DynamoDBService,
     private storage: DataLocalService,
@@ -51,14 +51,8 @@ export class Tab2Page {
 
   getColumnText(event) {
     switch (event.detail.value) {
-      case 'cta. destinatario':
-        this.columnaBuscar = 'cuentaDest';
-        break;
-      case 'cta. remitente':
-        this.columnaBuscar = 'cuentaRemi';
-        break;
-      case 'numero transferencia':
-        this.columnaBuscar = 'id';
+      case 'numero cuenta':
+        this.columnaBuscar = 'numeroCuenta';
         break;
 
       default:
@@ -78,6 +72,9 @@ export class Tab2Page {
   }
   async createTransfer() {
     await this.getpersonalAccounts();
+    console.log(this.cuentas);
+    console.log(this.cuentasUsuario);
+
     this.mostrarModalCreateTrans(
       this.currentUser.usuario,
       this.cuentasUsuario,
@@ -141,9 +138,10 @@ export class Tab2Page {
           await this.db.getAccount(fav.numeroCuenta).then((resp) => {
             this.cuenta = resp.data;
           });
-          this.cuentasAhorro.push(this.cuenta);
+          this.cuentas.push(this.cuenta);
         }
       }
+      console.log(this.cuentas);
     }
     this.bubbles = false;
   }

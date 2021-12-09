@@ -13,7 +13,7 @@ export class AcreditarComponent implements OnInit {
   alert = false;
   error = false;
   message: string;
-  cantidad: Number;
+  cantidad: number;
   constructor(
     private db: DynamoDBService,
     private modalController: ModalController
@@ -50,37 +50,40 @@ export class AcreditarComponent implements OnInit {
       this.message = 'La cuenta está bloqueada';
       return;
     }
-    let nuevoSaldo = Number(this.cuenta.saldo) + Number(this.cantidad);
+    const nuevoSaldo = Number(this.cuenta.saldo) + Number(this.cantidad);
     if (this.cuenta.tipo === 'monetaria') {
       //Modificar saldo de cuenta monetaria
-      this.db.modifyMonetary(this.cuenta.usuario, 'saldo', nuevoSaldo.toString()).then((resp) => {
-        //Validar si resp es true
-        if(resp){
-          this.alert = true;
-          this.error = false;
-          this.message = 'Acreditación exitosa';
-        }
-        else{
-          this.alert = true;
-          this.error = true;
-          this.message = 'Error al acreditar';
-        }
-      });
+      this.db
+        .modifyMonetary(this.cuenta.usuario, 'saldo', nuevoSaldo.toString())
+        .then((resp) => {
+          //Validar si resp es true
+          if (resp) {
+            this.alert = true;
+            this.error = false;
+            this.message = 'Acreditación exitosa';
+          } else {
+            this.alert = true;
+            this.error = true;
+            this.message = 'Error al acreditar';
+          }
+        });
     }
     if (this.cuenta.tipo === 'ahorro') {
       //Modificar saldo de cuenta ahorro
-      this.db.modifyAccount(this.cuenta.numeroCuenta, 'saldo', nuevoSaldo.toString()).then((resp) => {
-        //Validar si resp es true
-        if (resp) {
-          this.alert = true;
-          this.error = false;
-          this.message = 'Acreditación exitosa';
-        } else {
-          this.alert = true;
-          this.error = true;
-          this.message = 'Error al acreditar';
-        }
-      });
+      this.db
+        .modifyAccount(this.cuenta.numeroCuenta, 'saldo', nuevoSaldo.toString())
+        .then((resp) => {
+          //Validar si resp es true
+          if (resp) {
+            this.alert = true;
+            this.error = false;
+            this.message = 'Acreditación exitosa';
+          } else {
+            this.alert = true;
+            this.error = true;
+            this.message = 'Error al acreditar';
+          }
+        });
     }
   }
 }
