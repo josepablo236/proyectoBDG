@@ -230,8 +230,8 @@ export class DynamoDBService {
   }
 
   //Función para eliminar de favoritos
-  async deleteFavorite(cuenta: string) {
-    const url = `/favorite?numeroCuenta=${cuenta}`;
+  async deleteFavorite(id: string) {
+    const url = `/favorite?id=${id}`;
     return this.deleteQuery(url);
   }
 

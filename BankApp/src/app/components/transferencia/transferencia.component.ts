@@ -117,6 +117,7 @@ export class TransferenciaComponent implements OnInit {
       this.message = 'La cuenta ingresada no existe';
     }
     const fav: Favorito = {
+      id: uuidv4().substring(0,8),
       numeroCuenta: this.cuenta.numeroCuenta,
       usuario: this.user,
       usuarioCuenta: this.cuenta.usuario,

@@ -220,7 +220,7 @@ export class CuentaComponent implements OnInit {
                 break;
 
               case 'deleteFavorite':
-                this.db.deleteFavorite(cuenta.numeroCuenta);
+                this.db.deleteFavorite(cuenta.id);
                 this.presentToast('Cuenta eliminada de favoritos', 'danger');
                 break;
 

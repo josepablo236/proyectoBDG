@@ -49,20 +49,5 @@
     <h3 *ngIf="cuentasAhorro.length !== 0">Cuenta/s de Ahorro</h3>
     <app-cuenta *ngIf="!bubbles" [cuentas]="cuentasAhorro  | filtro:textoBuscar:columnaBuscar" [currentUser]="currentUser" [monetary]="false" [usuario]="currentUser.usuario">
     </app-cuenta>
-    <div class=" div-center" *ngIf="(cuentas.length === 0 )&& !bubbles">
-        <ion-card class="card-empty ">
-            <ion-header>
-                <ion-toolbar>
-                    <ion-title>Cuentas Favoritas</ion-title>
-                </ion-toolbar>
-            </ion-header>
-            <ion-card-content>
-                <ion-item>
-                    <ion-label class="text">Aun no has añadido ninguna cuenta favorita</ion-label>
-                </ion-item>
-
-            </ion-card-content>
-
-        </ion-card>
-    </div>
+    
 </ion-content>

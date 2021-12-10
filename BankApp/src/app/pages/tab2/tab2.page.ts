@@ -127,13 +127,23 @@ export class Tab2Page {
         if (fav.tipo === 'monetaria') {
           await this.db.getMonetary(fav.usuarioCuenta).then((resp) => {
             this.cuenta = resp.data;
+            this.cuenta.id = fav.id;
           });
-          this.cuentas.push(this.cuenta);
+          let array = this.cuentas.filter(x => x.numeroCuenta === this.cuenta.numeroCuenta);
+          if(array.length === 0)
+          {
+            this.cuentas.push(this.cuenta);
+          }
         } else if (fav.tipo === 'ahorro') {
           await this.db.getAccount(fav.numeroCuenta).then((resp) => {
             this.cuenta = resp.data;
+            this.cuenta.id = fav.id;
           });
-          this.cuentas.push(this.cuenta);
+          let array = this.cuentas.filter(x => x.numeroCuenta === this.cuenta.numeroCuenta);
+          if(array.length === 0)
+          {
+            this.cuentas.push(this.cuenta);
+          }
         }
       }
     }

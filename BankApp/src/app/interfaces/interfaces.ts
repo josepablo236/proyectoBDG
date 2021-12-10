@@ -12,6 +12,7 @@ export interface User {
 
 export interface Cuenta {
   numeroCuenta: string;
+  id?: string;
   usuario: string;
   saldo: number;
   estado: string;
@@ -19,6 +20,7 @@ export interface Cuenta {
 }
 
 export interface Favorito {
+  id: string;
   numeroCuenta: string;
   usuario: string;
   usuarioCuenta: string;
