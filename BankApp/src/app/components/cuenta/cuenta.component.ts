@@ -49,6 +49,21 @@ export class CuentaComponent implements OnInit {
       cuenta
     );
   }
+  editAccount(cuenta: Cuenta) {
+    if (this.currentUser.isAdmin) {
+      //bloquear la cuenta de un usuario
+      this.blockAccount(cuenta);
+    } else {
+      //alert para eliminar la cuenta de favoritos
+      this.presentAlertConfirm(
+        'Eliminar Favorito',
+        '¿Deseas eliminar esta cuenta de tus favoritos?',
+        'deleteFavorite',
+        cuenta
+      );
+    }
+  }
+
   blockAccount(cuenta: Cuenta) {
     let mensaje;
     let header;
@@ -62,7 +77,6 @@ export class CuentaComponent implements OnInit {
     }
     this.presentAlertConfirm(header, mensaje, 'blockAccount', cuenta);
   }
-
   async acreditar(cuenta: Cuenta) {
     this.mostrarModalAcreditar(cuenta);
   }
@@ -126,22 +140,17 @@ export class CuentaComponent implements OnInit {
     return cuentas;
   }
   async historial(cuenta: Cuenta) {
-    if (!this.currentUser.isAdmin){
-       await this.db.getUserTrans(this.currentUser.usuario).then((resp) => {
-         this.transferencias = resp.data['trans'];
-         this.transferencias = this.transferencias.filter(
-           (x) => x.destinatario === cuenta.usuario
-         );
-         console.log(resp.data);
-       });
-       console.log(this.transferencias);
-    }
-    else{
+    if (!this.currentUser.isAdmin) {
+      await this.db.getUserTrans(this.currentUser.usuario).then((resp) => {
+        this.transferencias = resp.data['trans'];
+        this.transferencias = this.transferencias.filter(
+          (x) => x.destinatario === cuenta.usuario
+        );
+      });
+    } else {
       await this.db.getAccountTrans(cuenta.numeroCuenta).then((resp) => {
         this.transferencias = resp.data['trans'];
-        console.log(resp.data);
       });
-      console.log(this.transferencias);
     }
     this.mostrarModalTransaccion(this.transferencias, '', false, true);
   }
@@ -208,6 +217,11 @@ export class CuentaComponent implements OnInit {
                 break;
               case 'savingAccount':
                 this.db.createAccount(cuenta);
+                break;
+
+              case 'deleteFavorite':
+                this.db.deleteFavorite(cuenta.numeroCuenta);
+                this.presentToast('Cuenta eliminada de favoritos', 'danger');
                 break;
 
               default:

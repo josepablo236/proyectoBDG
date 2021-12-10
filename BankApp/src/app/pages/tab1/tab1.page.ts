@@ -53,7 +53,6 @@ export class Tab1Page {
   }
 
   transferir(numeroCuenta: string) {
-    console.log('NUMERO CUENTA', numeroCuenta);
     this.getAccounts();
     //getFavAccoutns
     this.mostrarModalCreateTrans(
@@ -71,8 +70,6 @@ export class Tab1Page {
 
   historial(cuenta: Cuenta) {
     this.db.getAccountTrans(cuenta.numeroCuenta).then((resp) => {
-      console.log(resp.data['trans']);
-
       this.mostrarModalTransaccion(
         resp.data['trans'],
         cuenta.numeroCuenta,

@@ -25,7 +25,6 @@ export class HistorialTransaccionesComponent {
   }
   async init() {
     this.currentUser = await this.storage.getCurrentUser();
-    console.log(this.currentUser);
   }
   async ionViewWillEnter() {
     await this.init();

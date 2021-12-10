@@ -6,7 +6,7 @@
     </ion-toolbar>
 </ion-header>
 <ion-toolbar>
-    <ion-searchbar placeholder="Buscar transferencia" inputmode="decimal" type="decimal" (ionChange)="onSearchChange($event)" [debounce]="700" [value]="textoBuscar"></ion-searchbar>
+    <ion-searchbar placeholder="Buscar transferencia" type="text" (ionChange)="onSearchChange($event)" [debounce]="700" [value]="textoBuscar"></ion-searchbar>
     <ion-buttons>
 
         <ion-button>
@@ -32,5 +32,20 @@
     </ion-grid>
     <app-historial-transacciones *ngIf="!bubbles" [transferencias]="transferencias | filtro:textoBuscar:columnaBuscar" [isAdmin]="currentUser.isAdmin" numeroCuenta="" [menu]="false">
     </app-historial-transacciones>
+    <div class=" center-div" *ngIf=" transferencias.length === 0 && !bubbles">
+        <ion-card>
+            <ion-header>
+                <ion-toolbar>
+                    <ion-title>Transacciones</ion-title>
+                </ion-toolbar>
+            </ion-header>
+            <ion-card-content>
+                <ion-item>
+                    <ion-label class="text">Aun no has realizado ninguna transaccion</ion-label>
+                </ion-item>
 
+            </ion-card-content>
+
+        </ion-card>
+    </div>
 </ion-content>

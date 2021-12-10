@@ -12,20 +12,20 @@
 </ion-header>
 <ion-content>
     <div class="div-center">
-      <h1 class="center">Acreditar dinero a cuenta</h1>
-      <img src="../../../assets/images/acreditar.svg" width="300px" />
+        <h1 class="center">Acreditar dinero a cuenta</h1>
+        <img src="../../../assets/images/acreditar.svg" width="300px" />
         <form (ngSubmit)="onSubmit()">
             <ion-item-group>
                 <app-alert *ngIf="alert" [message]="message" [error]="error"></app-alert>
 
                 <ion-item>
                     <ion-label>Cuenta a creditar</ion-label>
-                    <ion-input  [value]="cuenta.numeroCuenta" name="cuenta" [disabled]="true" pattern="^[a-zA-Z0-9\-\.]+$" type="text" required>
+                    <ion-input [value]="cuenta.numeroCuenta" name="cuenta" readonly pattern="^[a-zA-Z0-9\-\.]+$" type="text" required>
                     </ion-input>
                 </ion-item>
                 <ion-item>
                     <ion-label>Usuario</ion-label>
-                    <ion-input class="ion-text-right" [value]="cuenta.usuario" [disabled]="true" type="text">
+                    <ion-input class="ion-text-right" [value]="cuenta.usuario" readonly type="text">
                     </ion-input>
                 </ion-item>
                 <ion-item>
@@ -38,6 +38,6 @@
                 Acreditar
             </ion-button>
         </form>
-      
+
     </div>
 </ion-content>

@@ -32,7 +32,7 @@ export class UsersPage implements OnInit {
   users: User[] = [];
   currentUser = {
     usuario: undefined,
-    isAdmin: false,
+    isAdmin: true,
   };
   constructor(
     private db: DynamoDBService,

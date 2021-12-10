@@ -31,7 +31,6 @@ export class UserInfoPage implements OnInit {
     } else {
       this.imgPath = this.user.img;
     }
-    console.log(this.user);
   }
   regresar() {
     this.modalController.dismiss();
@@ -93,7 +92,6 @@ export class UserInfoPage implements OnInit {
       this.user.nacimiento !== null
     ) {
       await this.db.createUser(this.user).then((response) => {
-        console.log(response);
         if (response) {
           this.error = false;
           this.alert = true;

@@ -12,39 +12,43 @@ import { v4 as uuidv4 } from 'uuid';
   styleUrls: ['./create-users.page.scss'],
 })
 export class CreateUsersPage implements OnInit {
-
   checked: boolean;
-  minDate = (new Date()).getFullYear()-18;
+  minDate = new Date().getFullYear() - 18;
   user: User = {
     usuario: '',
     password: '',
     rol: '',
-    nombre: '' ,
+    nombre: '',
     direccion: '',
     nacimiento: '',
-    telefono:'',
-};
+    telefono: '',
+  };
   public opt = [
     { val: 'Monetaria', isChecked: true },
-    { val: 'Ahorro', isChecked: false }];
-  constructor(private toastController: ToastController,private modalCtrl: ModalController, private db: DynamoDBService) { }
+    { val: 'Ahorro', isChecked: false },
+  ];
+  constructor(
+    private toastController: ToastController,
+    private modalCtrl: ModalController,
+    private db: DynamoDBService
+  ) {}
 
   ngOnInit() {
     this.init();
   }
-  async init(){
+  async init() {
     this.checked = false;
     //password definido
     this.user.password = '12345';
   }
   //metodo para crear cuentas
-  async crearCuentas(){
+  async crearCuentas() {
     const cuenta: Cuenta = {
       usuario: this.user.usuario,
       numeroCuenta: uuidv4().substring(0, 8),
-      saldo: 1000.00,
+      saldo: 1000.0,
       estado: 'activa',
-      tipo: 'monetaria'
+      tipo: 'monetaria',
     };
 
     //metodo de la db para crear cuentas monetarias
@@ -58,49 +62,56 @@ export class CreateUsersPage implements OnInit {
     }
   }
 
-  crearUsuario(): boolean{
+  crearUsuario(): boolean {
     //role y estado asignados por defecto
     this.user.rol = 'usuario';
     this.user.estado = 'activa';
-    this.db.createUser(this.user).then(response =>{
-      if(response){
+    this.db.createUser(this.user).then((response) => {
+      if (response) {
         this.presentToast('Usuario creado satisfactoriamente', 'success');
         this.crearCuentas();
         return true;
-      }else{
+      } else {
         this.presentToast('Error al crear el usuario', 'danger');
         return false;
       }
     });
     return false;
   }
-   // Encrypt
-  encrypt(){
-    const ciphertext = CryptoJS.AES.encrypt(this.user.password, 'secret key 123').toString();
+  // Encrypt
+  encrypt() {
+    const ciphertext = CryptoJS.AES.encrypt(
+      this.user.password,
+      'secret key 123'
+    ).toString();
     return ciphertext;
   }
 
-  getDateItem(event){
+  getDateItem(event) {
     //
-    this.user.nacimiento = formatDate(event.detail.value, 'yyyy-MM-dd', 'en-US');
+    this.user.nacimiento = formatDate(
+      event.detail.value,
+      'yyyy-MM-dd',
+      'en-US'
+    );
   }
 
-  isChecked(event){
+  isChecked(event) {
     this.checked = !event.currentTarget.checked;
   }
 
-  salirModal(){
+  salirModal() {
     this.modalCtrl.dismiss();
   }
   //Crear usuario
-  async onSubmit( formulario: NgForm ) {
+  async onSubmit(formulario: NgForm) {
     this.user.password = this.encrypt();
 
-    if(this.user.nacimiento !== ''){
+    if (this.user.nacimiento !== '') {
       this.crearUsuario();
       this.salirModal();
-    }else{
-      this.presentToast('Llena todos los campos','danger');
+    } else {
+      this.presentToast('Llena todos los campos', 'danger');
     }
   }
   async presentToast(toastMessage: string, toastColor: string) {

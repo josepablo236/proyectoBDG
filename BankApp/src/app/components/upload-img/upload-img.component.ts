@@ -26,8 +26,8 @@ export class UploadImgComponent implements OnInit {
 
   ngOnInit() {}
 
-  async fileUpload(event: FileList) {
-    const file = event.item(0);
+  async fileUpload(event) {
+    const file = event.files.item(0);
 
     if (file.type.split('/')[0] !== 'image') {
       this.error = true;
@@ -60,7 +60,6 @@ export class UploadImgComponent implements OnInit {
     //Modificar foto de usuario
     this.db.modifyImg(this.userName, 'img', this.imgPath).then((resp) => {
       //Validar si resp es true
-      console.log(resp);
     });
     this.modalController.dismiss();
   }

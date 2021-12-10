@@ -13,13 +13,15 @@ export class DataLocalService {
   }
 
   async getCurrentUser() {
-    const user = await this.storage.get('currentUser');
+    let user = await this.storage.get('currentUser');
 
-    if (user != null) {
-      return user;
-    } else {
-      return null;
+    if (user === null || user === undefined) {
+      user = {
+        usuario: undefined,
+        isAdmin: false,
+      };
     }
+    return user;
   }
   guardarCurrentUser(user: any) {
     this.storage.set('currentUser', user);

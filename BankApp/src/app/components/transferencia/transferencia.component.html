@@ -30,7 +30,7 @@
 
                 <ion-item *ngIf="numeroCuentaDest !== '' && !editCuentaDest">
                     <ion-label>Cuenta a creditar</ion-label>
-                    <ion-input (ionChange)="getuser($event,'destinatario')" [value]="transferencia.cuentaDest" name="cuenta" pattern="^[a-zA-Z0-9\-\.]+$" type="text" required>
+                    <ion-input (ionChange)="getuser($event,'destinatario')" [clearInput]="true" [value]="transferencia.cuentaDest" name="cuenta" pattern="^[a-zA-Z0-9\-\.]+$" type="text" required>
                     </ion-input>
                     <ion-button slot="end" (click)="editCuentaDest = true">
                         <ion-icon slot="icon-only" name="pencil-outline"></ion-icon>
@@ -51,17 +51,18 @@
                 </ion-item>
                 <ion-item>
                     <ion-label>Usuario</ion-label>
-                    <ion-input class="ion-text-right" [value]="transferencia.destinatario" [disabled]="true" type="text">
+                    <ion-input class="ion-text-right" [value]="transferencia.destinatario" readonly type="text">
                     </ion-input>
                 </ion-item>
                 <ion-item>
-                    <ion-label position="floating">Descipcion</ion-label>
+                    <ion-label position="floating">Descripcion</ion-label>
                     <ion-input maxlength='150' (ionChange)="setDescription($event)" type="text">
                     </ion-input>
                 </ion-item>
                 <ion-item>
                     <ion-label>Cantidad</ion-label>
-                    <ion-input (ionChange)="setCantidad($event)" type="number" required></ion-input>
+                    <ion-input (ionChange)="setCantidad($event)" inputmode="decimal" type="decimal" required>
+                    </ion-input>
                 </ion-item>
             </ion-item-group>
 
@@ -81,15 +82,12 @@
                 <app-alert *ngIf="alert" [message]="message" [error]="error"></app-alert>
                 <ion-item>
                     <ion-label position="floating">Numero de cuenta</ion-label>
-                    <ion-input (ionChange)="getuser($event,'destinatario')" [value]="transferencia.cuentaDest" name="cuenta" pattern="^[a-zA-Z0-9\-\.]+$" type="text" required>
+                    <ion-input [clearInput]="true" (ionChange)="getuser($event,'destinatario')" [value]="transferencia.cuentaDest" name="cuenta" pattern="^[a-zA-Z0-9\-\.]+$" type="text" required>
                     </ion-input>
-                    <ion-button fill="clear" slot="end" (click)="transferencia.cuentaDest = ''">
-                        <ion-icon color="danger" name="close-outline"></ion-icon>
-                    </ion-button>
                 </ion-item>
                 <ion-item>
                     <ion-label>Usuario</ion-label>
-                    <ion-input class="ion-text-right" [value]="transferencia.destinatario" [disabled]="true" type="text">
+                    <ion-input class="ion-text-right" readonly [value]="transferencia.destinatario" type="text">
                     </ion-input>
                 </ion-item>
 

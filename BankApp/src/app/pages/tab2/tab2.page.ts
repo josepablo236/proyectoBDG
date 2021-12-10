@@ -72,8 +72,6 @@ export class Tab2Page {
   }
   async createTransfer() {
     await this.getpersonalAccounts();
-    console.log(this.cuentas);
-    console.log(this.cuentasUsuario);
 
     this.mostrarModalCreateTrans(
       this.currentUser.usuario,
@@ -84,7 +82,6 @@ export class Tab2Page {
 
   async getpersonalAccounts() {
     this.cuentasUsuario = [];
-    console.log(this.currentUser);
 
     await this.db.getUserAccounts(this.currentUser.usuario).then((resp) => {
       this.cuentasUsuario = resp.data['cuentas'];
@@ -93,7 +90,6 @@ export class Tab2Page {
     await this.db.getMonetary(this.currentUser.usuario).then((resp) => {
       this.cuentasUsuario.push(resp.data);
     });
-    console.log(this.cuentasUsuario);
   }
 
   async ionViewWillEnter() {
@@ -126,7 +122,6 @@ export class Tab2Page {
       await this.db.getUserFavorites(this.currentUser.usuario).then((resp) => {
         this.favoritas = resp.data['cuentas'];
       });
-      console.log(this.favoritas);
 
       for (const fav of this.favoritas) {
         if (fav.tipo === 'monetaria') {
@@ -141,7 +136,6 @@ export class Tab2Page {
           this.cuentas.push(this.cuenta);
         }
       }
-      console.log(this.cuentas);
     }
     this.bubbles = false;
   }

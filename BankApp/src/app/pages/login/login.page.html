@@ -1,5 +1,3 @@
-
-
 <ion-content [fullscreen]="true" class="ion-padding">
     <div class="div-center">
 
@@ -10,16 +8,23 @@
 
                     <ion-item-divider>
                         <ion-label>Usuario</ion-label>
-                        <ion-input slot="end" style="text-align: right;" type="text" placeholder="Usuario" name="nombre" [(ngModel)]="user"  maxlength='10' required></ion-input>
+                        <ion-input slot="end" style="text-align: right;" type="text" placeholder="Usuario" name="nombre" [(ngModel)]="user" maxlength='10' required></ion-input>
                     </ion-item-divider>
                     <ion-item-divider>
                         <ion-label>Password</ion-label>
-                        <ion-input slot="end" style="text-align: right;" type="Password" placeholder="Password" name="password" [(ngModel)]="pass"  minlength="5" show-hide-input required></ion-input>
+                        <ion-input slot="end" style="text-align: right;" type="Password" placeholder="Password" name="password" [(ngModel)]="pass" minlength="5" show-hide-input required></ion-input>
                     </ion-item-divider>
                     <ion-button class="card-margin" type="submit" expand="block" [disabled]="formulario.invalid">
                         continue
                     </ion-button>
                 </form>
+                <ion-grid *ngIf="bubbles" fixed>
+                    <ion-row>
+                        <ion-col class="ion-text-center">
+                            <ion-spinner color="primary" name="bubbles"></ion-spinner>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
             </ion-card-content>
         </ion-card>
     </div>

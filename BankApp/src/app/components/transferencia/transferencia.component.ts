@@ -42,9 +42,7 @@ export class TransferenciaComponent implements OnInit {
     private modalController: ModalController
   ) {}
 
-  ngOnInit() {
-    console.log(this.cuentasFav);
-  }
+  ngOnInit() {}
 
   regresar() {
     this.modalController.dismiss();
@@ -52,8 +50,6 @@ export class TransferenciaComponent implements OnInit {
   async onSubmit() {
     this.alert = false;
     this.error = false;
-    console.log(this.cuentaDestino);
-    console.log(this.cuentaEmisora);
 
     //Validar que llene todos los campos
     if (
@@ -101,8 +97,7 @@ export class TransferenciaComponent implements OnInit {
       this.alert = true;
       this.error = true;
       this.message = 'Saldo insuficiente para transferir';
-      console.log(this.cuentaEmisora.saldo);
-      console.log(this.transferencia.cantidad);
+
       return;
     }
     if (!this.error) {
@@ -128,7 +123,7 @@ export class TransferenciaComponent implements OnInit {
       estado: this.cuenta.estado,
       tipo: this.cuenta.tipo,
     };
-    console.log(fav);
+
     this.db.createFavorite(fav).then((response) => {
       if (response) {
         this.alert = true;
@@ -150,7 +145,6 @@ export class TransferenciaComponent implements OnInit {
 
   async getuser(event, tipo: string) {
     if (event.detail.value !== '') {
-      console.log('ONCHANGEEEE', event.detail.value);
       await this.getpersonalAccounts(event.detail.value, tipo);
     } else if (this.agregar) {
       this.transferencia.destinatario = '';
@@ -167,7 +161,6 @@ export class TransferenciaComponent implements OnInit {
 
   async ionViewWillEnter() {
     if (this.numeroCuentaDest !== '') {
-      console.log(this.numeroCuentaDest);
       await this.getpersonalAccounts(this.numeroCuentaDest, 'destinatario');
     }
   }
@@ -184,15 +177,14 @@ export class TransferenciaComponent implements OnInit {
 
     if (tipo === 'destinatario') {
       this.cuentaDestino = this.cuenta;
-      console.log('Destino', this.cuentaDestino);
+
       this.transferencia.cuentaDest = this.cuentaDestino.numeroCuenta;
       this.transferencia.destinatario = this.cuentaDestino.usuario;
     } else if (tipo === 'remitente') {
       this.cuentaEmisora = this.cuenta;
-      console.log('Emisora', this.cuentaEmisora);
+
       this.transferencia.cuentaRemi = this.cuentaEmisora.numeroCuenta;
       this.transferencia.remitente = this.cuentaEmisora.usuario;
-      console.log('Transfer', this.transferencia);
     }
 
     this.transferencia.fecha = formatDate(
@@ -224,7 +216,7 @@ export class TransferenciaComponent implements OnInit {
           const nuevoSaldo =
             Number(this.cuentaDestino.saldo) +
             Number(this.transferencia.cantidad);
-          console.log(nuevoSaldo);
+
           await this.db.modifyAccount(
             this.cuentaDestino.numeroCuenta,
             'saldo',
@@ -237,7 +229,7 @@ export class TransferenciaComponent implements OnInit {
           const nuevoSaldo =
             Number(this.cuentaEmisora.saldo) -
             Number(this.transferencia.cantidad);
-          console.log(nuevoSaldo);
+
           await this.db.modifyMonetary(
             this.cuentaEmisora.usuario,
             'saldo',

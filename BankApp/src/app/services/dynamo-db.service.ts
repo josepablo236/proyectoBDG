@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
 import * as CryptoJS from 'crypto-js';
+import { HttpClient } from '@angular/common/http';
 import {
   User,
   Cuenta,
   Transferencia,
   Favorito,
 } from '../interfaces/interfaces';
-
 const urlAPI =
   'https://091gij42xe.execute-api.us-east-2.amazonaws.com/proyecto';
 
@@ -18,7 +18,7 @@ export class DynamoDBService {
   usuario: User;
   isAdmin: boolean;
   currentUser: string;
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   //Login
   async getUser(user: string, password: string) {
@@ -35,7 +35,7 @@ export class DynamoDBService {
         this.currentUser = user;
         if (this.usuario.rol === 'admin') {
           this.isAdmin = true;
-          console.log(this.isAdmin);
+
           return 'admin';
         } else {
           if (this.usuario.estado === 'activa') {
@@ -100,7 +100,6 @@ export class DynamoDBService {
 
   //Funcion para crear cuenta monetaria
   async createMonetary(cuenta: Cuenta) {
-    console.log(cuenta);
     const url = urlAPI + '/monetary-account';
     await axios.post(url, cuenta);
     return true;
@@ -142,7 +141,6 @@ export class DynamoDBService {
 
   //Funcion para crear cuenta ahorros
   async createAccount(cuenta: Cuenta) {
-    console.log(cuenta);
     const url = urlAPI + '/savings-account';
     await axios.post(url, cuenta);
     return true;
@@ -233,10 +231,7 @@ export class DynamoDBService {
 
   //Función para eliminar de favoritos
   async deleteFavorite(cuenta: string) {
-    const request = {
-      numeroCuenta: cuenta,
-    };
-    const url = urlAPI + '/favorite';
+    const url = `/favorite?numeroCuenta=${cuenta}`;
     return this.deleteQuery(url);
   }
 

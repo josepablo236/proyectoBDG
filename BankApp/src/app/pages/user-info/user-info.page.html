@@ -24,7 +24,7 @@
         <ion-row>
             <ion-col size="12">
                 <form #form="ngForm" (ngSubmit)="cambiarPass(form)">
-                    <ion-item-group>
+                    <ion-item-group no-lines>
                         <app-alert *ngIf="alert" [message]="message" [error]="error"></app-alert>
                         <ion-item>
                             <ion-label position="floating">Password</ion-label>
@@ -52,7 +52,7 @@
                     <img *ngIf="user.img" [src]="user.img">
                     <img *ngIf="!user.img" src="../../../assets/images/profile-photo/empty.png">
                 </ion-card>
-                <ion-button (click)="cambiarFoto = true; alert = false" expand="block" fill="clear" shape="round">
+                <ion-button class="button" (click)="cambiarFoto = true; alert = false" expand="block" fill="clear" shape="round">
                     Cambiar foto
                 </ion-button>
             </ion-col>

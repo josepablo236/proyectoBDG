@@ -6,7 +6,7 @@
         </ion-card-header>
         <ion-card-content>
             <p capitalize>{{cuenta.tipo}}</p>
-            <p capitalize>{{cuenta.estado}}</p>
+            <p capitalize *ngIf="currentUser.isAdmin">{{cuenta.estado}}</p>
             <ion-item-group *ngIf="currentUser.isAdmin" class="flex">
                 <ion-label> Q {{cuenta.saldo}}</ion-label>
             </ion-item-group>
@@ -25,8 +25,9 @@
                     <ion-icon slot="start" name="add"></ion-icon>
 
                 </ion-button>
-                <ion-button slot="end" *ngIf="currentUser.isAdmin" (click)="blockAccount(cuenta)">
-                    <ion-icon slot="start" name="ban-outline"></ion-icon>
+                <ion-button slot="end" (click)="editAccount(cuenta)">
+                    <ion-icon slot="start" *ngIf="currentUser.isAdmin" name="ban-outline"></ion-icon>
+                    <ion-icon slot="start" *ngIf="!currentUser.isAdmin" name="trash-outline"></ion-icon>
                 </ion-button>
             </ion-buttons>
 

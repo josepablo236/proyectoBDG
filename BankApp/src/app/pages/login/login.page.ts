@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { DynamoDBService } from '../../services/dynamo-db.service';
 import { DataLocalService } from '../../services/data-local.service';
 
@@ -13,9 +13,11 @@ import { DataLocalService } from '../../services/data-local.service';
 export class LoginPage implements OnInit {
   user: string;
   pass: string;
+  bubbles = false;
   constructor(
     private toastController: ToastController,
     private db: DynamoDBService,
+    public alertController: AlertController,
     private storage: DataLocalService,
     private router: Router
   ) {}
@@ -27,24 +29,27 @@ export class LoginPage implements OnInit {
     };
     await this.storage.guardarCurrentUser(currentUser);
   }
-  onSubmit(formulario: NgForm) {
-    this.db.getUser(this.user, this.pass).then((response) => {
+  async onSubmit(formulario: NgForm) {
+    this.bubbles = true;
+    await this.db.getUser(this.user, this.pass).then((response) => {
       if (response === 'admin') {
         this.presentToast('Succesful login', 'success');
         this.guardarCurrentUser(this.user, true);
         this.router.navigate(['/user/tabs/users']);
+        this.bubbles = false;
         formulario.resetForm();
       } else if (response === 'user') {
         this.presentToast('Succesful login', 'success');
         this.guardarCurrentUser(this.user, false);
+        this.bubbles = false;
         this.router.navigate(['/user/tabs/tab1']);
         formulario.resetForm();
       } else {
         this.presentToast(response, 'danger');
       }
     });
+    this.bubbles = false;
   }
-
   async presentToast(toastMessage: string, toastColor: string) {
     const toast = await this.toastController.create({
       cssClass: 'center',

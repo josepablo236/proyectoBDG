@@ -16,8 +16,7 @@ export class FiltroPipe implements PipeTransform {
       return arr;
     } else {
       texto = texto.toLocaleLowerCase();
-      console.log(typeof arr[0][columna]);
-      console.log(arr[0][columna]);
+
       return arr.filter((item) =>
         item[columna].toString().toLowerCase().includes(texto)
       );
