@@ -1,0 +1,99 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons class="flex">
+
+            <ion-button slot="start" color="primary" (click)="regresar()">
+                <ion-icon slot="start" name="arrow-back-circle-outline"></ion-icon>
+                <ion-label>Regresar</ion-label>
+            </ion-button>
+
+            <ion-button *ngIf="!edit" class="left" slot="end" color="warning" (click)="edit = true; alert = false">
+                <ion-icon slot="start" name="key-outline"></ion-icon>
+                <ion-label>Cambiar contraseña</ion-label>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Actualizar" refreshingSpinner="circles" refreshingText="Actualizando...">
+        </ion-refresher-content>
+    </ion-refresher>
+    <ion-grid class="div-center" fixed *ngIf="edit">
+        <h1>Cambiar contraseña</h1>
+        <ion-row>
+            <ion-col size="12">
+                <form #form="ngForm" (ngSubmit)="cambiarPass(form)">
+                    <ion-item-group no-lines>
+                        <app-alert *ngIf="alert" [message]="message" [error]="error"></app-alert>
+                        <ion-item>
+                            <ion-label position="floating">Password</ion-label>
+                            <ion-input [(ngModel)]="password" name="password" type="password" placeholder="Password" show-hide-input required></ion-input>
+                        </ion-item>
+
+                        <ion-item>
+                            <ion-label position="floating">Confirmar Password</ion-label>
+                            <ion-input [(ngModel)]="confirmPassword" name="password" type="password" placeholder="Password" show-hide-input required></ion-input>
+                        </ion-item>
+                    </ion-item-group>
+
+                    <ion-button class="ion-margin" expand="block" color="primary" type="submit" [disabled]="form.invalid">
+                        Guardar
+                    </ion-button>
+                </form>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <ion-grid class="div-center" fixed *ngIf="!edit">
+        <ion-row *ngIf="!cambiarFoto">
+            <ion-col size="4">
+                <ion-card class="poster">
+                    <img *ngIf="user.img" [src]="user.img">
+                    <img *ngIf="!user.img" src="../../../assets/images/profile-photo/empty.png">
+                </ion-card>
+                <ion-button class="button" (click)="cambiarFoto = true; alert = false" expand="block" fill="clear" shape="round">
+                    Cambiar foto
+                </ion-button>
+            </ion-col>
+            <ion-col size="8">
+                <form #formulario="ngForm" (ngSubmit)="actualizarUser(formulario)">
+                    <ion-item-group>
+                        <app-alert *ngIf="alert" [message]="message" [error]="error"></app-alert>
+                        <ion-item>
+                            <ion-label position="floating">Usuario</ion-label>
+                            <ion-input disabled="true" [(ngModel)]="user.usuario" maxlength='10' pattern="^([a-zA-Z0-9_\-\.]+)$" name="usuario" type="text" required></ion-input>
+                        </ion-item>
+                        <ion-item>
+                            <ion-label position="floating">Nombre</ion-label>
+                            <ion-input [(ngModel)]="user.nombre" maxlength='25' pattern="^([a-zA-Z0-9_\-\.]+)$" name="nombre" type="text" required></ion-input>
+                        </ion-item>
+                        <ion-item>
+                            <ion-label position="floating">Direccion</ion-label>
+                            <ion-input [(ngModel)]="user.direccion" maxlength='100' pattern="^([a-zA-Z0-9_\-\.]+)$" name="direccion" type="text" required></ion-input>
+                        </ion-item>
+
+                        <ion-item>
+                            <ion-label position="floating">Fecha de Nacimiento</ion-label>
+                            <ion-input type="text" name="nacimiento" disabled="true" [value]="user.nacimiento">
+                            </ion-input>
+                        </ion-item>
+
+                        <ion-item>
+                            <ion-label position="floating">Telefono</ion-label>
+                            <ion-input [(ngModel)]="user.telefono" maxlength='10' pattern="^([0-9_\-\.]+)$" name="telefono" type="text" required></ion-input>
+                        </ion-item>
+                    </ion-item-group>
+
+                    <ion-button class="ion-margin" expand="block" color="primary" type="submit" [disabled]="formulario.invalid">
+                        Actualizar Datos
+                    </ion-button>
+
+                </form>
+            </ion-col>
+        </ion-row>
+        <ion-row *ngIf="cambiarFoto">
+            <app-upload-img [userName]="user.usuario"></app-upload-img>
+        </ion-row>
+    </ion-grid>
+</ion-content>

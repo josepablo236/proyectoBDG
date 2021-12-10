@@ -1,13 +1,51 @@
 <ion-header [translucent]="true">
     <ion-toolbar>
-        <ion-title fixed>
-            Historial de Transacciones
+        <ion-title capitalize>
+            Historial
         </ion-title>
     </ion-toolbar>
-
 </ion-header>
+<ion-toolbar>
+    <ion-searchbar placeholder="Buscar transferencia" type="text" (ionChange)="onSearchChange($event)" [debounce]="700" [value]="textoBuscar"></ion-searchbar>
+    <ion-buttons>
 
+        <ion-button>
+            <ion-icon name="filter-outline">
+
+            </ion-icon>
+            <ion-select [value]="columnaBuscar" (ionChange)="getColumnText($event)" interface="popover" name="cuenta">
+                <ion-list *ngFor="let campo of campos">
+                    <ion-select-option [value]="campo">{{campo}}</ion-select-option>
+                </ion-list>
+            </ion-select>
+        </ion-button>
+    </ion-buttons>
+
+</ion-toolbar>
 <ion-content [fullscreen]="true">
+    <ion-grid *ngIf="bubbles" fixed>
+        <ion-row>
+            <ion-col class="ion-text-center">
+                <ion-spinner color="primary" name="bubbles"></ion-spinner>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <app-historial-transacciones *ngIf="!bubbles" [transferencias]="transferencias | filtro:textoBuscar:columnaBuscar" [isAdmin]="currentUser.isAdmin" numeroCuenta="" [menu]="false">
+    </app-historial-transacciones>
+    <div class=" center-div" *ngIf=" transferencias.length === 0 && !bubbles">
+        <ion-card>
+            <ion-header>
+                <ion-toolbar>
+                    <ion-title>Transacciones</ion-title>
+                </ion-toolbar>
+            </ion-header>
+            <ion-card-content>
+                <ion-item>
+                    <ion-label class="text">Aun no has realizado ninguna transaccion</ion-label>
+                </ion-item>
 
+            </ion-card-content>
 
+        </ion-card>
+    </div>
 </ion-content>

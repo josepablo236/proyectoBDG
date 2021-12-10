@@ -1,0 +1,36 @@
+<ion-list *ngFor="let cuenta of cuentas">
+    <ion-card>
+        <ion-card-header>
+            <ion-card-subtitle>{{cuenta.usuario}}</ion-card-subtitle>
+            <ion-card-title>{{cuenta.numeroCuenta}}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+            <p capitalize>{{cuenta.tipo}}</p>
+            <p capitalize *ngIf="currentUser.isAdmin">{{cuenta.estado}}</p>
+            <ion-item-group *ngIf="currentUser.isAdmin" class="flex">
+                <ion-label> Q {{cuenta.saldo}}</ion-label>
+            </ion-item-group>
+
+            <ion-buttons>
+                <ion-button *ngIf="!currentUser.isAdmin" (click)="transferir(cuenta)">
+                    <ion-icon slot="start" name="receipt-outline"></ion-icon>
+                </ion-button>
+                <ion-button *ngIf="currentUser.isAdmin" (click)="acreditar(cuenta)">
+                    <ion-icon slot="start" name="receipt-outline"></ion-icon>
+                </ion-button>
+                <ion-button (click)="historial(cuenta)">
+                    <ion-icon slot="start" name="compass-outline"></ion-icon>
+                </ion-button>
+                <ion-button slot="start" *ngIf="currentUser.isAdmin && monetary" (click)="createSavingAccount(cuenta)">
+                    <ion-icon slot="start" name="add"></ion-icon>
+
+                </ion-button>
+                <ion-button slot="end" (click)="editAccount(cuenta)">
+                    <ion-icon slot="start" *ngIf="currentUser.isAdmin" name="ban-outline"></ion-icon>
+                    <ion-icon slot="start" *ngIf="!currentUser.isAdmin" name="trash-outline"></ion-icon>
+                </ion-button>
+            </ion-buttons>
+
+        </ion-card-content>
+    </ion-card>
+</ion-list>

@@ -1,0 +1,50 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+
+        <ion-title class="ion-text-center" capitalize>
+            Administrar Usuarios
+        </ion-title>
+        <ion-buttons slot="end">
+            <ion-button color="success" (click)="mostrarModalCreate()">
+                <ion-icon slot="start" name="person-add-outline"></ion-icon>
+            </ion-button>
+            <ion-button color="danger" (click)="cerrarSesion()">
+                <ion-icon name="exit-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+
+
+    </ion-toolbar>
+
+</ion-header>
+<ion-content [fullscreen]="true">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Actualizar" refreshingSpinner="circles" refreshingText="Actualizando...">
+        </ion-refresher-content>
+    </ion-refresher>
+    <ion-list>
+        <ion-item *ngFor="let user of users">
+            <ion-avatar slot="start">
+                <img *ngIf="user.img === undefined" src="../../../assets/images/profile-photo/empty.png">
+                <img *ngIf="user.img !== undefined" [src]="user.img">
+            </ion-avatar>
+            <ion-label>
+                <h2>{{user.usuario}}</h2>
+                <h3>{{user.estado}}</h3>
+                <p>Telefono: {{user.telefono}}</p>
+            </ion-label>
+            <ion-buttons slot="end">
+                <ion-button fill="clear" slot="end" (click)="bannearUsuario(user)">
+                    <ion-icon color="warning" name="ban-outline"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" slot="end" (click)="eliminar(user)">
+                    <ion-icon color="danger" name="close-circle-outline"></ion-icon>
+                </ion-button>
+            </ion-buttons>
+
+
+
+        </ion-item>
+
+    </ion-list>
+</ion-content>

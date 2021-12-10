@@ -1,31 +1,40 @@
 export interface User {
-    user: string;
-    password: string;
-    rol: string;
-    nombre: string;
-    direccion: string;
-    nacimiento: Date;
-    telefono: string;
+  usuario: string;
+  password: string;
+  img?: string;
+  estado?: string;
+  rol: string;
+  nombre: string;
+  direccion: string;
+  nacimiento: string;
+  telefono: string;
 }
 
-export interface CuentaMonetaria {
-    numeroCuenta: number;
-    user: string;//User;
-    saldo: number;
-    estado: boolean;
+export interface Cuenta {
+  numeroCuenta: string;
+  id?: string;
+  usuario: string;
+  saldo: number;
+  estado: string;
+  tipo: string;
 }
 
-export interface CuentaAhorro {
-    numeroCuenta: number;
-    user: string;//User;
-    saldo: number;
-    estado: boolean;
+export interface Favorito {
+  id: string;
+  numeroCuenta: string;
+  usuario: string;
+  usuarioCuenta: string;
+  estado: string;
+  tipo: string;
 }
 
 export interface Transferencia {
-    idTransfer: number;
-    destinatario: string;//User;
-    remitente: string;//User;
-    cantidad: number;
-    fecha: Date;
+  id: string;
+  remitente: string;
+  destinatario: string;
+  cantidad: number;
+  fecha: string;
+  cuentaRemi: string;
+  cuentaDest: string;
+  descripcion: string;
 }

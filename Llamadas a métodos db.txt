@@ -1,0 +1,185 @@
+//Modificar contraseña de usuario
+    this.db.modifyPass('joseor','password', '7000').then(resp =>{
+      //Validar si resp es true
+      console.log(resp);
+    });
+
+//Eliminar un usuario
+    // this.db.deleteUser('ferore').then(resp =>{
+    //   //Validar si resp es true
+    //   console.log(resp);
+    // });
+
+    //Mostrar todas las cuentas monetarias (admin)
+    this.db.getMonetaryAcounts().then(resp =>{
+      console.log(resp.data);
+    });
+
+    //Crear cuenta monetaria
+     this.db.createMonetary(this.cuenta).then(response =>{
+       if(response){
+         formulario.resetForm();
+         this.presentToast('Cuenta creada satisfactoriamente', 'success');
+       }else{
+         this.presentToast('Error al crear la cuenta', 'danger');
+       }
+     });
+
+    //Validar si la cuenta monetaria existe con usuario
+    this.db.getMonetary("joseor").then(resp =>{
+      console.log(resp.data);
+      if(resp.data){
+        console.log("existe");
+        //Validar si está bloqueada
+        let estado = resp.data['estado'];
+        if(estado === 'activa'){
+          console.log("activa");
+        }
+        else{
+          console.log("bloqueada");
+        }
+      }
+      else{
+        console.log("no existe");
+      }
+    });
+
+    //Validar si la cuenta monetaria existe con numero
+    this.db.getNumMonetary("01896ds6").then(resp =>{
+      if(resp.data['cuentas'].length > 0){
+        console.log("existe");
+        //Validar si está bloqueada
+        let estado = resp.data['cuentas'][0].estado;
+        if(estado === 'activa'){
+          console.log("activa");
+        }
+        else{
+          console.log("bloqueada");
+        }
+      }
+      else{
+        console.log("no existe");
+      }
+    });
+
+    //Modificar saldo de cuenta monetaria
+    this.db.modifyMonetary('joseor','saldo', '7000').then(resp =>{
+      //Validar si resp es true
+      console.log(resp);
+    });
+
+    //Modificar estado cuenta monetaria
+    this.db.modifyMonetary('joseor','estado', 'activa').then(resp =>{
+      //Validar si resp es true
+      console.log(resp);
+    });
+
+    //Eliminar cuenta monetaria
+    // this.db.deleteMonetary('ferore').then(resp =>{
+    //   //Validar si resp es true
+    //   console.log(resp);
+    // });
+
+
+    //Mostrar todas las cuentas ahorro (admin)
+    this.db.getAcounts().then(resp =>{
+      console.log(resp.data);
+    });
+
+    //Crear cuenta ahorro
+     this.db.createAccount(this.cuenta).then(response =>{
+       if(response){
+         formulario.resetForm();
+         this.presentToast('Cuenta creada satisfactoriamente', 'success');
+       }else{
+         this.presentToast('Error al crear la cuenta', 'danger');
+       }
+     });
+
+    //Validar cuenta ahorro
+    this.db.getAccount("198952").then(resp =>{
+      console.log(resp.data);
+      if(resp.data){
+        console.log("existe");
+        //Validar si está bloqueada
+        let estado = resp.data['estado'];
+        if(estado === 'activa'){
+          console.log("activa");
+        }
+        else{
+          console.log("bloqueada");
+        }
+      }
+      else{
+        console.log("no existe");
+      }
+    });
+
+    //Traer todas las cuentas de ahorro por usuario
+    this.db.getUserAccounts("ferore").then(resp =>{
+      if(resp.data['cuentas'].length > 0){
+        console.log("si hay cuentas de ahorro");
+        console.log(resp.data['cuentas']);
+      }
+      else{
+        console.log("no tiene cuentas de ahorro");
+      }
+    });
+
+    //Modificar saldo de cuenta ahorro
+    this.db.modifyAccount('198952','saldo', '7000').then(resp =>{
+      //Validar si resp es true
+      console.log(resp);
+    });
+
+    //Modificar estado cuenta monetaria
+    this.db.modifyAccount('198952','estado', 'bloqueada').then(resp =>{
+      //Validar si resp es true
+      console.log(resp);
+    });
+
+    //Eliminar cuenta monetaria
+    // this.db.deleteMonetary('ferore').then(resp =>{
+    //   //Validar si resp es true
+    //   console.log(resp);
+    // });
+
+
+
+    //Mostrar todas las transferencias (admin)
+    this.db.getTransfers().then(resp =>{
+      console.log(resp.data);
+    });
+
+    //Crear transferencia
+     this.db.createTrans(this.trans).then(response =>{
+       if(response){
+         formulario.resetForm();
+         this.presentToast('Transferencia exitosa', 'success');
+       }else{
+         this.presentToast('Error en la transferencia', 'danger');
+       }
+     });
+
+    //Obtener transferencia
+    this.db.getTrans("1").then(resp =>{
+      if(resp.data){
+        console.log("existe");
+        console.log(resp.data);
+      }
+      else{
+        console.log("no existe");
+      }
+    });
+
+    //Traer todas las transferencias por usuario
+    this.db.getUserTrans("ferore").then(resp =>{
+      console.log(resp.data);
+      if(resp.data['trans'].length > 0){
+        console.log("si hay transferencias");
+        console.log(resp.data['trans']);
+      }
+      else{
+        console.log("no tiene transferencias");
+      }
+    });
